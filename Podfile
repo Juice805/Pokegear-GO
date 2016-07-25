@@ -12,4 +12,7 @@ pod 'Alamofire',
 pod 'SwiftyJSON',
 :git => 'https://github.com/SwiftyJSON/SwiftyJSON.git',
 :branch => 'swift3'
+pod 'AsyncSwift',
+:git => 'https://github.com/duemunk/Async.git',
+:branch => 'feature/Swift_3.0'
 end

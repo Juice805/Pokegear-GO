@@ -9,6 +9,7 @@
 import Foundation
 import Alamofire
 import SwiftyJSON
+import Async
 
 class Skiplagged {
     private static let SKIPLAGGED_API = "http://skiplagged.com/api/pokemon.php"
@@ -33,32 +34,33 @@ class Skiplagged {
         
         let provider = PokemonTrainerClub.getAuthProvider()
         
-        ptcAuth.getAccessToken(username, password: password) { (token, error) in
+        ptcAuth.getAccessToken(username, password: password) {
+            (tokenResult) in
             
-            if token != nil && error == nil {
-                if let _ = self.updateLogin(provider, token: token, username: username, password: password) {
-                    printTimestamped("Access Token Received")
+            switch (tokenResult) {
+            case .Success(let token):
+                if let token = self.updateLogin(provider, token: token, username: username, password: password) {
+                    printTimestamped("Access Token Received: \(token)")
                     completion()
-                    return
                 } else {
-                    printTimestamped("Login Failed: No Token Received")
+                    printTimestamped("Login Failed: No token")
                     return
                 }
-            } else {
+            case .Failure(let error):
                 printTimestamped("Login Failed: " + error.debugDescription)
                 return
             }
         }
     }
     
-    func updateLogin(_ provider: String, token: String?, username: String, password: String) -> (provider: String, token: String)? {
+    func updateLogin(_ provider: String, token: String?, username: String, password: String) -> (String)? {
         if token != nil {
             self.AUTH_PROVIDER = provider
             self.ACCESS_TOKEN = token!
             self.USERNAME = username
             self.PASSWORD = password
             
-            return (self.AUTH_PROVIDER!, self.ACCESS_TOKEN!)
+            return self.ACCESS_TOKEN!
         } else {
             return nil
         }
@@ -81,6 +83,7 @@ class Skiplagged {
             self.PROFILE_RAW = ""
             
             if self.AUTH_PROVIDER == "ptc" {
+                printTimestamped("Refreshing Login")
                 self.loginWithPTC(self.USERNAME!, password: self.PASSWORD!, completion: completion)
             } else  if self.AUTH_PROVIDER == "google" {
                 //TODO: google login
@@ -90,125 +93,161 @@ class Skiplagged {
     
     // MARK: - Calls
     
-    func call(_ endpoint: String, data: JSON, completion: (data: [String: AnyObject]?, error: NSError?) -> ()) {
+    func call(_ endpoint: String, data: JSON, completion: (jsonResult: jsonResult) -> ()) {
         let isSkiplaggedAPI = endpoint.contains("skiplagged")
         
+        var session: Manager
+        
+        
         if isSkiplaggedAPI {
-            setRequestsSession("pokemongo-python")
+            session = setRequestsSession("pokemongo-python")
         } else {
-            setRequestsSession("Niantic App")
+            session = setRequestsSession("Niantic App")
         }
         
-        while true {
-            
+        print(session.session.configuration.httpAdditionalHeaders)
+        
+        
+        Async.background {
+            while true {
+                
                 if isSkiplaggedAPI {
-                    Alamofire.request(.POST,
+                    session.request(.POST,
                                       endpoint,
                                       parameters: data.dictionaryObject,
-                                      encoding: .url,
+                                      encoding: .json,
                                       headers: nil)
-                    .validate().responseJSON(completionHandler: { (response) in
-                        switch response.result {
-                        case .success(let data): break
-                        case .failure(let error):
-                            printTimestamped("Skiplagged API request failed with error: \(error.debugDescription)")
+                        .validate().responseJSON() {
+                            (response) in
                             
-                            if let data = response.data {
-                                printTimestamped("Response: \(String(data: data, encoding: String.Encoding.utf8) )")
-                            }
-                             completion(data: nil, error: error)
-                            return
-                        }
-                        
-                        let json = JSON(data: response.data!)
-                        if let error = json.error {
-                            completion(data: nil, error: error)
-                            return
-                        } else {
-                            completion(data: json.dictionaryObject, error: nil)
-                        }
-                    })
-                } else {
-                    Alamofire.request(.POST,
-                        endpoint,
-                        parameters: data.dictionaryObject,
-                        encoding: .url,
-                        headers: nil)
-                        .validate().responseJSON(completionHandler: { (response) in
                             switch response.result {
-                            case .success(let data): break
+                            case .success(let data):
+                                let json = JSON(data as! [String: AnyObject])
+                                if let error = json.error {
+                                    completion(jsonResult: .Failure(error))
+                                    return
+                                } else {
+                                    completion(jsonResult: .Success(json))
+                                    return
+                                }
                             case .failure(let error):
                                 printTimestamped("Skiplagged API request failed with error: \(error.debugDescription)")
                                 
                                 if let data = response.data {
                                     printTimestamped("Response: \(String(data: data, encoding: String.Encoding.utf8) )")
                                 }
-                                completion(data: nil, error: error)
+                                completion(jsonResult: .Failure(error))
+                                return
+                            }
+                    }
+                    
+                } else {
+                    session.request(.POST,
+                                      endpoint,
+                                      parameters: data.dictionaryObject,
+                                      encoding: .url,
+                                      headers: nil)
+                        .validate().responseJSON() { (response) in
+                            switch response.result {
+                            case .success(let data):
+                                printTimestamped("")
+                                completion(jsonResult: .Success(JSON(data)))
+                                
+                            case .failure(let error):
+                                printTimestamped("Niantic request failed with error: \(error.debugDescription)")
+                                
+                                if let data = response.data {
+                                    printTimestamped("Response: \(String(data: data, encoding: String.Encoding.utf8)! )")
+                                }
+                                completion(jsonResult: .Failure(error))
                                 return
                             }
                             
-                            let json = JSON(data: response.data!)
-                            if let error = json.error {
-                                completion(data: nil, error: error)
-                                return
-                            } else {
-                                completion(data: json.dictionaryObject, error: nil)
-                            }
-                        })
+                            
+                        }
                 }
-            
+                
+                sleep(1)
+                
+            }
         }
+        
         
     }
     
-    func getSpecificAPIEndpoint(_ completion: (specificAPIEndpoint: String?) -> ()) {
+    func getSpecificAPIEndpoint(_ completion: (specificAPIEndpointResult: stringResult) -> ()) {
         printTimestamped("called get_specific_api_endpoint")
         if !isLoggedOn() {
-            printTimestamped(PokemapErrors.pDataAPI.description); completion(specificAPIEndpoint: nil)
+            printTimestamped(PokemapError.pDataAPI.description);
+            completion(specificAPIEndpointResult: .Failure(NSError.errorWithCode(1, failureReason: "Must be logged in")))
             return
         }
         
         // request 1
         self.call(Skiplagged.SKIPLAGGED_API,
                   data: JSON(["access_token": self.ACCESS_TOKEN!,
-                    "auth_provider": self.AUTH_PROVIDER!])) {
-                        (data, error) in
-                        if error == nil {
-                            guard let pdata1 = data!["pdata"] else {
-                                printTimestamped(PokemapErrors.pDataAPI.description); completion(specificAPIEndpoint: nil); return
-                            }
-                            
-                            // request 2
-                            self.call(Skiplagged.GENERAL_API,
-                                      data: JSON(pdata1))
-                            { (data, error) in
+                              "auth_provider": self.AUTH_PROVIDER!])) {
+                                (jsonResult) in
                                 
-                                guard let pdata = data else {
-                                    printTimestamped(PokemapErrors.pDataAPI.description); completion(specificAPIEndpoint: nil); return
-                                }
-                                
-                                // request 3
-                                self.call(Skiplagged.SKIPLAGGED_API,
-                                          data: JSON(["access_token": self.ACCESS_TOKEN!,
-                                            "auth_provider": self.AUTH_PROVIDER!,
-                                            "pdata": pdata])) {
-                                                (data, error) in
-                                                if error == nil {
-                                                    guard let apiEndpoint = data!["api_endpoint"] as? String
-                                                        else {
-                                                            printTimestamped(PokemapErrors.specificAPIEndpoint.description)
-                                                            completion(specificAPIEndpoint: nil); return }
-                                                    self.SPECIFIC_API = apiEndpoint
-                                                    completion(specificAPIEndpoint: self.SPECIFIC_API)
+                                switch jsonResult {
+                                case .Failure(let error):
+                                    printTimestamped(error.description)
+                                    completion(specificAPIEndpointResult: .Failure(error))
+                                    return
+                                case .Success(let json):
+                                    guard let dict = json?.dictionaryObject,
+                                        let pdata1 = dict["pdata"]
+                                        else {
+                                            let error = PokemapError.expectedJSONKey.error
+                                            printTimestamped((json?.description)!)
+                                            completion(specificAPIEndpointResult: .Failure(error))
+                                            return
+                                    }
+                                    
+                                    
+                                    // request 2
+                                    self.call(Skiplagged.GENERAL_API,
+                                              data: JSON(pdata1)) {
+                                                (jsonResult) in
+                                                
+                                                switch jsonResult {
+                                                case .Failure(let error):
+                                                    printTimestamped("Failed to get PData")
+                                                    completion(specificAPIEndpointResult: .Failure(error))
+                                                    return
+                                                case .Success(let json):
+                                                    guard let pdata = json?.dictionaryObject else {
+                                                        let error = PokemapError.invalidJSON.error
+                                                        completion(specificAPIEndpointResult: .Failure(error))
+                                                        return
+                                                    }
+                                                    
+                                                    // request 3
+                                                    self.call(Skiplagged.SKIPLAGGED_API,
+                                                              data: JSON(["access_token": self.ACCESS_TOKEN!,
+                                                                          "auth_provider": self.AUTH_PROVIDER!,
+                                                                          "pdata": pdata])) {
+                                                                            (jsonResult) in
+                                                                            
+                                                                            switch jsonResult {
+                                                                            case .Failure(let error):
+                                                                                completion(specificAPIEndpointResult: .Failure(error))
+                                                                                break
+                                                                            case .Success(let json):
+                                                                                guard let apiEndpoint = json?["api_endpoint"] as? String
+                                                                                    else {
+                                                                                        let error = PokemapError.specificAPIEndpoint.error
+                                                                                        completion(specificAPIEndpointResult: .Failure(error));
+                                                                                        return
+                                                                                }
+                                                                                self.SPECIFIC_API = apiEndpoint
+                                                                                completion(specificAPIEndpointResult: .Success(self.SPECIFIC_API))
+                                                                                break
+                                                                            }
                                                 }
-                                                
-                                                
+                                        }
+                                    }
                                 }
-                            }
-                            
-                            
-                        }
-                        
         }
     }
     
@@ -220,6 +259,8 @@ class Skiplagged {
             getSpecificAPIEndpoint({ (specificAPIEndpoint) in
                 //TODO: get it
             })
+        } else {
+            
         }
         
         

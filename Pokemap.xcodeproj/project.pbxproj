@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		42B8E387025A134069A37A29 /* Pods_Pokemap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FC9986C06D7279FBF1B11A2 /* Pods_Pokemap.framework */; };
+		D0545FBF1D447BF8001B8497 /* config.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0545FBE1D447BF8001B8497 /* config.swift */; };
 		D0748E341D417AE200950A4D /* auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0748E331D417AE200950A4D /* auth.swift */; };
 		D076878F1D3F5AEB0082AF4F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D076878E1D3F5AEB0082AF4F /* AppDelegate.swift */; };
 		D07687911D3F5AEB0082AF4F /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07687901D3F5AEB0082AF4F /* MapViewController.swift */; };
@@ -27,6 +28,7 @@
 		284F0CB3670CDA18C94CFC55 /* Pods-Pokemap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pokemap.release.xcconfig"; path = "Pods/Target Support Files/Pods-Pokemap/Pods-Pokemap.release.xcconfig"; sourceTree = "<group>"; };
 		32730CAF387C58A85B0CCEDA /* Pods-Pokemap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pokemap.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Pokemap/Pods-Pokemap.debug.xcconfig"; sourceTree = "<group>"; };
 		4FC9986C06D7279FBF1B11A2 /* Pods_Pokemap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Pokemap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0545FBE1D447BF8001B8497 /* config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = config.swift; sourceTree = "<group>"; };
 		D0748E331D417AE200950A4D /* auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = auth.swift; sourceTree = "<group>"; };
 		D076878B1D3F5AEB0082AF4F /* Pokemap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pokemap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D076878E1D3F5AEB0082AF4F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 		D076878D1D3F5AEB0082AF4F /* Pokemap */ = {
 			isa = PBXGroup;
 			children = (
+				D0545FBE1D447BF8001B8497 /* config.swift */,
 				D07687AA1D4178D30082AF4F /* utils */,
 				D07687A91D4178C90082AF4F /* auth */,
 				D076878E1D3F5AEB0082AF4F /* AppDelegate.swift */,
@@ -259,6 +262,7 @@
 				D07687911D3F5AEB0082AF4F /* MapViewController.swift in Sources */,
 				D0748E341D417AE200950A4D /* auth.swift in Sources */,
 				D07687AC1D4178EC0082AF4F /* pokemon.swift in Sources */,
+				D0545FBF1D447BF8001B8497 /* config.swift in Sources */,
 				D07687B01D41791E0082AF4F /* google.swift in Sources */,
 				D07687971D3F5AEB0082AF4F /* Pokemap.xcdatamodeld in Sources */,
 				D076878F1D3F5AEB0082AF4F /* AppDelegate.swift in Sources */,

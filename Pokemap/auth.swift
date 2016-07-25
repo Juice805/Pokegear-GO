@@ -9,16 +9,8 @@
 import Foundation
 
 protocol Auth {
-    func getAccessToken(_ username: String, password: String, completion: (token: String?, error: NSError?) -> ())
+    func getAccessToken(_ username: String, password: String, completion: (tokenResult: stringResult) -> ())
     static func getAuthProvider() -> String
 }
 
-extension NSError {
-    
-    static func errorWithCode(_ code: Int, failureReason: String) -> NSError {
-        let userInfo = [NSLocalizedFailureReasonErrorKey: failureReason]
-        return NSError(domain: "pokemongoswiftapi.catch.em", code: code, userInfo: userInfo)
-    }
-    
-    
-}
+

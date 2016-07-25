@@ -21,66 +21,85 @@ class PokemonTrainerClub: Auth {
         return "ptc"
     }
     
-    func getAccessToken(_ username: String, password: String, completion: (token: String?, error: NSError?) -> ()) {
-        // Code from user scotbond: github.com/scotbond/PokemonGoSwiftAPI
+    func getAccessToken(_ username: String, password: String, completion: (tokenResult: stringResult) -> ()) {
+        // Code modified from user scotbond: github.com/scotbond/PokemonGoSwiftAPI
         
-        let loginURL = URL(string: PokemonTrainerClub.LOGIN_URL)
         
         // TODO: Revise
         // Sets request shared session headers
         setRequestsSession("niantic")
         
-        Alamofire.request(.GET, loginURL!, parameters: nil, encoding: .url, headers: nil).validate().responseJSON { (response) in
+        getInitialResponse(username, password: password) { (tokenResult) in
+            completion(tokenResult: tokenResult)
+        }
+        
+        
+    }
+    
+    private func getInitialResponse(_ username: String, password: String, completion: (tokenResult: stringResult) -> ()){
+        let loginURL = URL(string: PokemonTrainerClub.LOGIN_URL)
+        
+        Alamofire.request(.GET, loginURL!, parameters: nil, encoding: .url, headers: nil).validate().responseJSON {
+            (response) in
             
             switch response.result {
-            case .success(let data): break
             case .failure(let error):
                 printTimestamped("Initial request failed with error: \(error.debugDescription)")
                 
                 if let data = response.data {
                     printTimestamped("Response: \(String(data: data, encoding: String.Encoding.utf8) )")
                 }
-                completion(token: nil, error: error)
+                completion(tokenResult: .Failure(error))
                 return
+            case .success(let data):
+                
+               
+                
+                let json = JSON(data as! [String: AnyObject])
+                if let error = json.error {
+                    completion(tokenResult: .Failure(error))
+                    return
+                }
+                
+                let params = [
+                    "lt":json["lt"].stringValue,
+                    "execution": json["execution"].stringValue,
+                    "_eventId": "submit",
+                    "username": username,
+                    "password": password
+                ]
+                
+                self.getTicket(params) { (tokenResult) in
+                    completion(tokenResult: tokenResult)
+                }
+                
+                
             }
             
             
-            var lt = ""
-            var execution = ""
-            
-            let json = JSON(data: response.data!)
-            if let error = json.error {
-                completion(token: nil, error: error)
-                return
-            } else {
-                lt = json["lt"].stringValue
-                execution = json["execution"].stringValue
-            }
             
             
-            let params = [
-                "lt":lt,
-                "execution": execution,
-                "_eventId": "submit",
-                "username": username,
-                "password": password
-            ]
-            
-            
-            // Second Request
-            Alamofire.request(.POST, loginURL!,
-                parameters: params,
-                encoding: .url,
-                headers: nil)
-            .validate().responseJSON(completionHandler: {
+        }
+    }
+    
+    private func getTicket(_ params: [String: AnyObject], completion: (tokenResult: stringResult) -> ()) {
+        let loginURL = URL(string: PokemonTrainerClub.LOGIN_URL)
+
+        
+        // Second Request
+        Alamofire.request(.POST, loginURL!,
+                          parameters: params,
+                          encoding: .url,
+                          headers: nil)
+            .validate().responseJSON() {
                 (response) in
                 
                 guard let actualResponse = response.response,
-                    let range = actualResponse.url!.urlString.range(of:".*ticket=")
+                    let range = actualResponse.url!.urlString.range(of: ".*ticket=", options: .regularExpression, range: nil, locale: nil)
                     else {
                         let error = NSError.errorWithCode(NSURLErrorCannotParseResponse,
-                            failureReason: "Expected a ticket")
-                        completion(token: nil, error: error)
+                                                          failureReason: "Expected a ticket")
+                        completion(tokenResult: .Failure(error))
                         return
                 }
                 
@@ -94,31 +113,23 @@ class PokemonTrainerClub: Auth {
                     "grant_type": "refresh_token",
                     "code": ticket
                 ]
-
+                
                 Alamofire.request(.POST,
-                    oauthURL,
-                    parameters: params2,
-                    encoding: .url,
-                    headers: nil)
-                    .responseString { response in
+                                  oauthURL,
+                                  parameters: params2,
+                                  encoding: .url,
+                                  headers: nil)
+                    .responseString() { response in
                         
                         if let tokenString = response.result.value {
                             var range = tokenString.range(of: "access_token=")
                             var token = tokenString.substring(from: range!.upperBound)
                             range = token.range(of: "&expires")
                             token = token.substring(to: range!.lowerBound)
-                            completion(token: token, error: nil)
+                            completion(tokenResult: .Success(token))
                         }
-                        
                 }
-                
-                
-            })
-            
-            
-            
-        }
-        
+            }
     }
     
 }

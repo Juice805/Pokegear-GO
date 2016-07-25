@@ -8,6 +8,7 @@
 
 import UIKit
 import MapKit
+import Async
 
 class MapViewController: UIViewController {
     
@@ -19,6 +20,8 @@ class MapViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        self.pokemap.delegate = self
+        
         self.LocationManager = checkLocationAuthorization()
         
         if self.LocationManager == nil {
@@ -28,8 +31,7 @@ class MapViewController: UIViewController {
         
         
         if self.LocationManager != nil {
-            pokemap.setUserTrackingMode(.followWithHeading, animated: true)
-            pokemap.setRegion(MKCoordinateRegion(center: (LocationManager?.location?.coordinate)!, span: MKCoordinateSpanMake(0.005, 0.005)), animated: true)
+            gotoCurrentLocation(self)
         }
         
         
@@ -38,6 +40,16 @@ class MapViewController: UIViewController {
         client.loginWithPTC("WhiskeyJuice", password: "pokemon") { () in
             printTimestamped("Login Successful")
             
+                client.getSpecificAPIEndpoint({ (specificAPIEndpointResult) in
+                    switch specificAPIEndpointResult {
+                    case .Failure(let error):
+                        printTimestamped(error.description)
+                        break
+                    case .Success(let specificAPIEndpoint):
+                        printTimestamped("SUCCESS")
+                        break
+                    }
+                })
             
         }
     }
@@ -78,11 +90,15 @@ class MapViewController: UIViewController {
     }
 
     @IBAction func gotoCurrentLocation(_ sender: AnyObject) {
+        
         self.pokemap.setUserTrackingMode(.followWithHeading, animated: true)
+        
     }
 }
 
 extension MapViewController: MKMapViewDelegate {
+    
+
     
     
 }
