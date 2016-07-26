@@ -21,6 +21,7 @@
 		D07687AE1D4179060082AF4F /* general.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07687AD1D4179060082AF4F /* general.swift */; };
 		D07687B01D41791E0082AF4F /* google.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07687AF1D41791E0082AF4F /* google.swift */; };
 		D07687B31D4179370082AF4F /* ptc.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07687B21D4179370082AF4F /* ptc.swift */; };
+		D09E3CE81D46B94600DE9150 /* base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09E3CE71D46B94600DE9150 /* base64.swift */; };
 		D0CBC3AB1D41B14E000303AF /* skiplagged.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC3AA1D41B14E000303AF /* skiplagged.swift */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +44,7 @@
 		D07687AD1D4179060082AF4F /* general.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = general.swift; sourceTree = "<group>"; };
 		D07687AF1D41791E0082AF4F /* google.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = google.swift; sourceTree = "<group>"; };
 		D07687B21D4179370082AF4F /* ptc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ptc.swift; sourceTree = "<group>"; };
+		D09E3CE71D46B94600DE9150 /* base64.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = base64.swift; sourceTree = "<group>"; };
 		D0CBC3A91D41AA3F000303AF /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = MyPlayground.playground; path = Pokemap/MyPlayground.playground; sourceTree = "<group>"; };
 		D0CBC3AA1D41B14E000303AF /* skiplagged.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = skiplagged.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -130,6 +132,7 @@
 				D07687AB1D4178EC0082AF4F /* pokemon.swift */,
 				D07687AD1D4179060082AF4F /* general.swift */,
 				D0CBC3AA1D41B14E000303AF /* skiplagged.swift */,
+				D09E3CE71D46B94600DE9150 /* base64.swift */,
 			);
 			name = utils;
 			sourceTree = "<group>";
@@ -266,6 +269,7 @@
 				D07687B01D41791E0082AF4F /* google.swift in Sources */,
 				D07687971D3F5AEB0082AF4F /* Pokemap.xcdatamodeld in Sources */,
 				D076878F1D3F5AEB0082AF4F /* AppDelegate.swift in Sources */,
+				D09E3CE81D46B94600DE9150 /* base64.swift in Sources */,
 				D07687B31D4179370082AF4F /* ptc.swift in Sources */,
 				D0CBC3AB1D41B14E000303AF /* skiplagged.swift in Sources */,
 				D07687AE1D4179060082AF4F /* general.swift in Sources */,

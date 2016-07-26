@@ -13,21 +13,24 @@ import SwiftyJSON
 
 
 // TODO: Find out what userAgent is
-func setRequestsSession(_ userAgent: String? = nil) -> Manager {
+func getRequestsSession(_ userAgent: String? = nil) -> Manager {
     // Create the server trust policies
     let serverTrustPolicies: [String: ServerTrustPolicy] = [
         "nianticlabs.com": .disableEvaluation,
         "skiplagged.com": .disableEvaluation
     ]
+    
     // Create custom manager
     let configuration = URLSessionConfiguration.default
     configuration.httpAdditionalHeaders = Alamofire.Manager.defaultHTTPHeaders
     configuration.httpAdditionalHeaders!["User-Agent"] = userAgent
-    print(configuration.httpAdditionalHeaders)
+    
+    print("JUICE- ADDITIONAL HEADERS"+configuration.httpAdditionalHeaders!.debugDescription)
     let man = Alamofire.Manager(
         configuration: configuration,
         serverTrustPolicyManager: ServerTrustPolicyManager(policies: serverTrustPolicies)
     )
+    
     return man
 
 }
@@ -48,6 +51,7 @@ enum PokemapError: ErrorProtocol {
     case specificAPIEndpoint
     case invalidJSON
     case expectedJSONKey
+    case noProfileData
     
     var error: NSError {
         switch self {
@@ -64,7 +68,9 @@ enum PokemapError: ErrorProtocol {
         case .invalidJSON:
             return NSError.errorWithCode(3, failureReason: "Invalid JSON response")
         case .expectedJSONKey:
-            return NSError.errorWithCode(3, failureReason: "Expected JSON key but did not exist")
+            return NSError.errorWithCode(4, failureReason: "Expected JSON key but did not exist")
+        case .noProfileData:
+            return NSError.errorWithCode(12, failureReason: "No Profile data received")
         }
     }
     
@@ -79,7 +85,12 @@ enum stringResult{
 }
 
 enum jsonResult{
-    case Success(JSON?)
+    case Success([String: AnyObject]?)
+    case Failure(NSError)
+}
+
+enum anyResult{
+    case Success(AnyObject?)
     case Failure(NSError)
 }
 

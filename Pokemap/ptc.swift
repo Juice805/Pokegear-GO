@@ -24,11 +24,6 @@ class PokemonTrainerClub: Auth {
     func getAccessToken(_ username: String, password: String, completion: (tokenResult: stringResult) -> ()) {
         // Code modified from user scotbond: github.com/scotbond/PokemonGoSwiftAPI
         
-        
-        // TODO: Revise
-        // Sets request shared session headers
-        setRequestsSession("niantic")
-        
         getInitialResponse(username, password: password) { (tokenResult) in
             completion(tokenResult: tokenResult)
         }
@@ -84,7 +79,6 @@ class PokemonTrainerClub: Auth {
     
     private func getTicket(_ params: [String: AnyObject], completion: (tokenResult: stringResult) -> ()) {
         let loginURL = URL(string: PokemonTrainerClub.LOGIN_URL)
-
         
         // Second Request
         Alamofire.request(.POST, loginURL!,
@@ -119,9 +113,12 @@ class PokemonTrainerClub: Auth {
                                   parameters: params2,
                                   encoding: .url,
                                   headers: nil)
-                    .responseString() { response in
+                    .validate().responseString() { response in
                         
-                        if let tokenString = response.result.value {
+                        switch response.result {
+                        case .failure(let error):
+                            completion(tokenResult: .Failure(error))
+                        case .success(let tokenString):
                             var range = tokenString.range(of: "access_token=")
                             var token = tokenString.substring(from: range!.upperBound)
                             range = token.range(of: "&expires")

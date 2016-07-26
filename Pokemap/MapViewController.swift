@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 import Async
+import SwiftyJSON
 
 class MapViewController: UIViewController {
     
@@ -38,19 +39,30 @@ class MapViewController: UIViewController {
         let client = Skiplagged()
         
         client.loginWithPTC("WhiskeyJuice", password: "pokemon") { () in
-            printTimestamped("Login Successful")
+            printTimestamped("Login Successful" + "\n\n")
             
-                client.getSpecificAPIEndpoint({ (specificAPIEndpointResult) in
-                    switch specificAPIEndpointResult {
-                    case .Failure(let error):
-                        printTimestamped(error.description)
-                        break
-                    case .Success(let specificAPIEndpoint):
-                        printTimestamped("SUCCESS")
-                        break
+            client.getSpecificAPIEndpoint() { (specificAPIEndpointResult) in
+                switch specificAPIEndpointResult {
+                case .Failure(let error):
+                    printTimestamped("JUICE- ERROR: " + error.debugDescription)
+                    return
+                case .Success(let answer):
+                    printTimestamped("JUICE- Specific API SUCCESS: " + answer! + "\n\n")
+                
+                    client.getProfile() { (profileResult) in
+                        switch profileResult {
+                        case .Failure(let error):
+                            printTimestamped("JUICE- ERROR: " + error.debugDescription)
+                            return
+                        case .Success(let profile):
+                            print(profile.debugDescription + "\n\n")
+                            
+                            client.findPokemon(bounds: ((34.408359, -119.869816), (34.420923, -119.840293)))
+                            
+                        }
                     }
-                })
-            
+                }
+            }
         }
     }
 
@@ -83,7 +95,6 @@ class MapViewController: UIViewController {
             print("App is authorized for location services")
         }
         
-        LocationManager.delegate = self
         LocationManager.startUpdatingLocation()
         
         return LocationManager
@@ -110,5 +121,72 @@ extension MapViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
+    }
+}
+
+extension MapViewController {
+    func testCallSkipplagged(client: Skiplagged){
+        let data: [String:AnyObject] = ["access_token": client.ACCESS_TOKEN!,
+                    "auth_provider": client.AUTH_PROVIDER!
+        ]
+        
+        print("JUICE- INPUT DATA: " + data.debugDescription)
+        
+        client.call(Skiplagged.SKIPLAGGED_API, data: data) { (anyResult) in
+            switch anyResult {
+            case .Failure(let error):
+                printTimestamped(error.debugDescription)
+                break
+            case .Success(let data):
+                if let json = data as? [String: AnyObject] {
+                    print("JUICE- RESULT: " + json.debugDescription)
+                    
+                    
+                    client.call(Skiplagged.GENERAL_API, data: json["pdata"]!) { (jsonResult) in
+                        switch jsonResult {
+                        case .Failure(let error):
+                            printTimestamped("JUICE- ERROR: " + error.debugDescription)
+                            break
+                        case .Success(let data):
+                            if let json = JSON(data!).dictionaryObject {
+                                print("JUICE- RESULT: " + json.description)
+                            } else {
+                                printTimestamped("JUICE- ERROR: " + data.debugDescription)
+                            }
+                            break
+                            
+                        }
+                    }
+                } else {
+                    printTimestamped("JUICE- ERROR: " + data.debugDescription)
+                }
+                break
+                
+            }
+        }
+    }
+    
+    func testCallNiantic(client: Skiplagged){
+        let data: [String:AnyObject] = ["access_token": client.ACCESS_TOKEN!,
+                                        "auth_provider": client.AUTH_PROVIDER!
+        ]
+        
+        print("JUICE- INPUT DATA: " + data.debugDescription)
+        
+        client.call(Skiplagged.SKIPLAGGED_API, data: data) { (jsonResult) in
+            switch jsonResult {
+            case .Failure(let error):
+                printTimestamped(error.debugDescription)
+                break
+            case .Success(let data):
+                if let json = JSON(data!).dictionaryObject {
+                    print("JUICE- RESULT: " + json.description)
+                } else {
+                    printTimestamped("JUICE- ERROR: " + data.debugDescription)
+                }
+                break
+                
+            }
+        }
     }
 }
