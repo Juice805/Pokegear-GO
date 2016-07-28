@@ -4,3 +4,4 @@
 *.xcbkptlist
 
 Pokemap.xcworkspace/xcuserdata/*
+*.xcuserstate
