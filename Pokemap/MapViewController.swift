@@ -16,6 +16,9 @@ class MapViewController: UIViewController {
     @IBOutlet weak var pokemap: MKMapView!
     
     var LocationManager: CLLocationManager? = nil
+    let client = Skiplagged()
+    let maxSearchAltitude: Double = 75000
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,20 +39,19 @@ class MapViewController: UIViewController {
         }
         
         
-        let client = Skiplagged()
         
-        client.loginWithPTC("WhiskeyJuice", password: "pokemon") { () in
+        self.client.loginWithPTC("WhiskeyJuice", password: "pokemon") { () in
             printTimestamped("Login Successful" + "\n\n")
             
-            client.getSpecificAPIEndpoint() { (specificAPIEndpointResult) in
+            self.client.getSpecificAPIEndpoint() { (specificAPIEndpointResult) in
                 switch specificAPIEndpointResult {
                 case .Failure(let error):
                     printTimestamped("JUICE- ERROR: " + error.debugDescription)
                     return
                 case .Success(let answer):
                     printTimestamped("JUICE- Specific API SUCCESS: " + answer! + "\n\n")
-                
-                    client.getProfile() { (profileResult) in
+                    
+                    self.client.getProfile() { (profileResult) in
                         switch profileResult {
                         case .Failure(let error):
                             printTimestamped("JUICE- ERROR: " + error.debugDescription)
@@ -57,15 +59,29 @@ class MapViewController: UIViewController {
                         case .Success(let profile):
                             print(profile.debugDescription + "\n\n")
                             
-                            client.findPokemon(bounds: ((34.408359, -119.869816), (34.420923, -119.840293)))
-                            
+                            if (self.LocationManager?.location) != nil && self.pokemap.camera.altitude < self.maxSearchAltitude{
+                                let latDelt = self.pokemap.region.span.latitudeDelta/2
+                                let longDelt = self.pokemap.region.span.latitudeDelta/2
+                                let center = self.pokemap.region.center
+                                let bottomLeft: (Double, Double) = (center.latitude - latDelt, center.longitude - longDelt)
+                                let topRight: (Double, Double) = (center.latitude + latDelt, center.longitude + longDelt)
+                                self.client.findPokemon(bounds: ((bottomLeft), (topRight))) {
+                                    foundPokemon in
+                                    for pokemon in foundPokemon {
+                                        Async.main {
+                                            self.pokemap.addAnnotation(pokemon)
+                                        }
+                                    }
+                                }
+                                
+                            }
                         }
                     }
                 }
             }
         }
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -87,7 +103,7 @@ class MapViewController: UIViewController {
                 // User has denied access to location
                 print("Authorization not granted")
                 return nil
-            
+                
             }
             
         default:
@@ -99,7 +115,7 @@ class MapViewController: UIViewController {
         
         return LocationManager
     }
-
+    
     @IBAction func gotoCurrentLocation(_ sender: AnyObject) {
         
         self.pokemap.setUserTrackingMode(.followWithHeading, animated: true)
@@ -109,9 +125,76 @@ class MapViewController: UIViewController {
 
 extension MapViewController: MKMapViewDelegate {
     
-
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        
+        if annotation is MKUserLocation {
+            return nil
+        }
+        
+        
+        let pokeDetail = MKAnnotationView()
+        
+        if let pokemon = annotation as? Pokemon {
+            pokeDetail.image = UIImage(named: "\(pokemon.id)")
+        } else {
+            
+        }
+        
+        return pokeDetail
+    }
+    
+    func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
+        self.client.cancelSearch()
+    }
     
     
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        if client.PROFILE_RAW == nil {
+            return
+        }
+        
+        self.client.cancelSearch()
+        
+        if LocationManager != nil && self.pokemap.camera.altitude < maxSearchAltitude {
+            let latDelt = mapView.region.span.latitudeDelta/2
+            let longDelt = mapView.region.span.latitudeDelta/2
+            let center = mapView.region.center
+            client.findPokemon(bounds: ((center.latitude - latDelt, center.longitude - longDelt),
+                                        (center.latitude + latDelt, center.longitude + longDelt))) {
+                                            foundPokemon in
+                                            Async.background{
+                                                
+                                                for pokemon in foundPokemon {
+                                                    if pokemon.isUnique(pokemons: mapView.annotations) {
+                                                        Async.main {
+                                                            self.pokemap.addAnnotation(pokemon)
+                                                        }
+                                                        
+                                                        if #available(iOS 10.0, *) {
+                                                            pokemon.timer = Timer(fire: pokemon.expireTime, interval: 0.0, repeats: false, block:
+                                                                { (timer) in
+                                                                    self.pokemap.removeAnnotation(pokemon)
+                                                            })
+                                                            RunLoop.current.add(pokemon.timer!, forMode: RunLoopMode.commonModes)
+                                                        } else {
+                                                            // Fallback on earlier versions
+                                                            pokemon.timer = Timer(fireAt: pokemon.expireTime,
+                                                                                  interval: 0.0, target: self,
+                                                                                  selector: #selector(self.removePokemonfromTimer),
+                                                                                  userInfo: pokemon, repeats: false)
+                                                            
+                                                        }
+                                                    }
+                                                }
+                                            }
+            }
+        }
+        
+    }
+    
+    func removePokemonfromTimer(timer: Timer){
+        self.pokemap.removeAnnotation(timer.userInfo as! Pokemon)
+    }
 }
 
 extension MapViewController: CLLocationManagerDelegate {
@@ -125,68 +208,8 @@ extension MapViewController: CLLocationManagerDelegate {
 }
 
 extension MapViewController {
-    func testCallSkipplagged(client: Skiplagged){
-        let data: [String:AnyObject] = ["access_token": client.ACCESS_TOKEN!,
-                    "auth_provider": client.AUTH_PROVIDER!
-        ]
-        
-        print("JUICE- INPUT DATA: " + data.debugDescription)
-        
-        client.call(Skiplagged.SKIPLAGGED_API, data: data) { (anyResult) in
-            switch anyResult {
-            case .Failure(let error):
-                printTimestamped(error.debugDescription)
-                break
-            case .Success(let data):
-                if let json = data as? [String: AnyObject] {
-                    print("JUICE- RESULT: " + json.debugDescription)
-                    
-                    
-                    client.call(Skiplagged.GENERAL_API, data: json["pdata"]!) { (jsonResult) in
-                        switch jsonResult {
-                        case .Failure(let error):
-                            printTimestamped("JUICE- ERROR: " + error.debugDescription)
-                            break
-                        case .Success(let data):
-                            if let json = JSON(data!).dictionaryObject {
-                                print("JUICE- RESULT: " + json.description)
-                            } else {
-                                printTimestamped("JUICE- ERROR: " + data.debugDescription)
-                            }
-                            break
-                            
-                        }
-                    }
-                } else {
-                    printTimestamped("JUICE- ERROR: " + data.debugDescription)
-                }
-                break
-                
-            }
-        }
-    }
     
-    func testCallNiantic(client: Skiplagged){
-        let data: [String:AnyObject] = ["access_token": client.ACCESS_TOKEN!,
-                                        "auth_provider": client.AUTH_PROVIDER!
-        ]
-        
-        print("JUICE- INPUT DATA: " + data.debugDescription)
-        
-        client.call(Skiplagged.SKIPLAGGED_API, data: data) { (jsonResult) in
-            switch jsonResult {
-            case .Failure(let error):
-                printTimestamped(error.debugDescription)
-                break
-            case .Success(let data):
-                if let json = JSON(data!).dictionaryObject {
-                    print("JUICE- RESULT: " + json.description)
-                } else {
-                    printTimestamped("JUICE- ERROR: " + data.debugDescription)
-                }
-                break
-                
-            }
-        }
-    }
 }
+
+
+

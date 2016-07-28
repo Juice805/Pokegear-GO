@@ -25,8 +25,9 @@ class Skiplagged {
     private (set) var USERNAME: String?
     private (set) var PASSWORD: String?
     
-    let skiplaggedSession:Manager
-    let nianticSession: Manager
+    var skiplaggedSession:Manager
+    var nianticSession: Manager
+    
     
     init() {
         nianticSession = getRequestsSession("Niantic App")
@@ -283,8 +284,6 @@ class Skiplagged {
             "api_endpoint": self.SPECIFIC_API!
         ]
         
-        print("PAYLOAD: " + apiPayload.debugDescription)
-        
         self.call(Skiplagged.SKIPLAGGED_API, data: apiPayload) { (anyResult) in
             switch anyResult {
             case .Failure(let error):
@@ -300,7 +299,6 @@ class Skiplagged {
                         return
                 }
                 
-                print("RESULT: " + pdata.debugDescription)
                 
                 self.call(self.SPECIFIC_API!, data: pdata) { (anyResult) in
                     switch anyResult {
@@ -314,7 +312,6 @@ class Skiplagged {
                             return
                         }
                         
-                        print("RESULT: " + pdata)
                         
                         self.PROFILE_RAW = pdata
                         
@@ -324,8 +321,6 @@ class Skiplagged {
                             "api_endpoint": self.SPECIFIC_API!,
                             "pdata" : self.PROFILE_RAW!
                         ]
-                        
-                        print("PAYLOAD: " + profilePayload.debugDescription)
                         
                         
                         self.call(Skiplagged.SKIPLAGGED_API, data: profilePayload) { (anyResult) in
@@ -354,7 +349,8 @@ class Skiplagged {
         }
     }
     
-    func findPokemon(bounds: ((Float, Float),(Float, Float)), step_size: Float = 0.002) {
+    func findPokemon(bounds: ((Double, Double),(Double, Double)), step_size: Double = 0.002, completion: ([Pokemon]) -> ()) {
+        // bottom Left, topRight
         printTimestamped("Finding Pokemon")
         
         if PROFILE_RAW == nil {
@@ -362,12 +358,16 @@ class Skiplagged {
             getProfile() { (profileResult) in
                 switch profileResult {
                 case .Failure(let error):
-                    self.findPokemon(bounds: bounds, step_size: step_size)
+                    self.findPokemon(bounds: bounds, step_size: step_size) { pokemon in
+                        completion(pokemon)
+                    }
                     printTimestamped(error.debugDescription)
                     return
                 case .Success( _):
                     printTimestamped("Success")
-                    self.findPokemon(bounds: bounds, step_size: step_size)
+                    self.findPokemon(bounds: bounds, step_size: step_size) { pokemon in
+                        completion(pokemon)
+                    }
                     return
                 }
             }
@@ -386,9 +386,10 @@ class Skiplagged {
             "access_token": self.ACCESS_TOKEN!,
             "auth_provider": self.AUTH_PROVIDER!,
             "profile": self.PROFILE_RAW!,
-            "bounds": "\(lowerLeft["lat"]), \(lowerLeft["long"]), \(upperRight["lat"]), \(upperRight["long"])",
+            "bounds": "\(lowerLeft["lat"]!), \(lowerLeft["long"]!), \(upperRight["lat"]!), \(upperRight["long"]!)",
             "step_size": step_size
         ]
+        
         
         self.call(Skiplagged.SKIPLAGGED_API, data: payload) { (anyResult) in
             switch anyResult {
@@ -404,51 +405,92 @@ class Skiplagged {
                     return
                 }
                 
-                Async.background() {
-                    for request in requests {
-                        printTimestamped("Moving player")
+                printTimestamped("Requests: \(requests.count)")
+                
+                
+                
+                    scan: for request in requests {
                         
-                        self.call(self.SPECIFIC_API!, data: request["pdata"]!) { (anyResult) in
-                            switch anyResult {
-                            case .Failure(let error):
-                                
-                                //TODO: handle errors
-                                
-                                break
-                            case .Success(let pokeData):
-                                
-                                
-                                self.call(Skiplagged.SKIPLAGGED_API, data: ["pdata": pokeData!]) { (anyResult) in
-                                    switch anyResult {
-                                    case .Failure(let error):
-                                        
-                                        //TODO: handle errors
-                                        
-                                        break
-                                    case .Success(let response):
-                                        
-                                        print(response.debugDescription)
-                                        
-                                        let respDict = response as! [String: AnyObject]
-                                        let pokemon = respDict["pokemon"] as! [String: AnyObject]
-                                        printTimestamped("Found \(pokemon.count) Pokemon")
-                                        
-                                        break
+                        self.currentReq = self.currentReq.background() {
+                            
+                            printTimestamped("Moving player")
+                            
+                            self.call(self.SPECIFIC_API!, data: request["pdata"]!) { (anyResult) in
+                                switch anyResult {
+                                case .Failure(let error):
+                                    
+                                    //TODO: handle errors
+                                    printTimestamped("ERROR: " + error.debugDescription)
+                                    
+                                    
+                                    break
+                                case .Success(let pokeData):
+                                    
+                                    self.call(Skiplagged.SKIPLAGGED_API, data: ["pdata": pokeData!]) { (anyResult) in
+                                        switch anyResult {
+                                        case .Failure(let error):
+                                            
+                                            //TODO: handle errors
+                                            printTimestamped("ERROR: " + error.debugDescription)
+                                            
+                                            break
+                                        case .Success(let response):
+                                            
+                                            print(response!.debugDescription)
+                                            
+                                            
+                                            guard let respDict = response as? [String: AnyObject],
+                                                let pokemons = respDict["pokemons"] as? [[String: AnyObject]] else {
+                                                    
+                                                    //TODO: Handle Error
+                                                    printTimestamped("Couldn't decode pokemon data")
+                                                    return
+                                            }
+                                            
+                                            
+                                            printTimestamped("Found \(respDict["pokemons"]!.count!) Pokemon")
+                                            
+                                            var foundPokemon: [Pokemon] = []
+                                            
+                                            for pokemon in pokemons {
+                                                let poke = pokemon["pokemon_name"] as! String
+                                                printTimestamped("Found " + poke)
+                                                
+                                                foundPokemon.append(Pokemon(info: pokemon))
+                                                
+                                            }
+                                            
+                                            completion(foundPokemon)
+                                            return
+                                        }
                                     }
+                                    return
                                 }
-                                return
                             }
+                            Thread.sleep(forTimeInterval: 0.1)
                         }
-                        
-                        
-                        sleep(1)
                     }
-                }
+                
                 
                 return
             }
         }
         
+    }
+    
+    var currentReq = Async.background() {}
+    
+    func cancelSearch(){
+        self.currentReq.cancel()
+
+        Async.background{
+            self.nianticSession.session.getAllTasks { (tasks) in
+                tasks.forEach { $0.cancel() }
+            }
+            self.skiplaggedSession.session.getAllTasks { (tasks) in
+                tasks.forEach { $0.cancel() }
+            }
+        }
     }
     
 }
