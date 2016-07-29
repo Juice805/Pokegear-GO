@@ -52,13 +52,11 @@ class Pokemon: NSObject, MKAnnotation {
                     && poke.coordinate.longitude == self.coordinate.longitude
                     && timeDiff.second! < 10 {
                     return false
-                } else {
-                    return true
                 }
             }
         }
         
-        return false
+        return true
     }
     
     

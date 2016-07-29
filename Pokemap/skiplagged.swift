@@ -36,7 +36,7 @@ class Skiplagged {
     
     //TODO: Google Login
     
-    func loginWithPTC(_ username: String, password: String, completion: () -> ()){
+    func loginWithPTC(_ username: String, password: String, completion: (boolResult) -> ()){
         print("[\(shortTime())] Login Started")
         
         let ptcAuth = PokemonTrainerClub()
@@ -50,12 +50,15 @@ class Skiplagged {
             case .Success(let token):
                 if let token = self.updateLogin(provider, token: token, username: username, password: password) {
                     printTimestamped("Access Token Received: \(token)")
-                    completion()
+                    completion(.Success())
                 } else {
                     printTimestamped("Login Failed: No token")
+                    // TODO: Make proper error
+                    completion(.Failure(NSError.errorWithCode(12, failureReason: "No token")))
                     return
                 }
             case .Failure(let error):
+                completion(.Failure(NSError.errorWithCode(12, failureReason: "Bad token response")))
                 printTimestamped("Login Failed: " + error.debugDescription)
                 return
             }
@@ -82,7 +85,7 @@ class Skiplagged {
     }
     
     
-    func refreshLogin(_ completion: () -> ()){
+    func refreshLogin(_ completion: (boolResult) -> ()){
         if !isLoggedOn() {
             printTimestamped("ERROR: Requires an existing login")
             return

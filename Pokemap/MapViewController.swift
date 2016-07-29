@@ -16,8 +16,11 @@ class MapViewController: UIViewController {
     @IBOutlet weak var pokemap: MKMapView!
     
     var LocationManager: CLLocationManager? = nil
-    let client = Skiplagged()
+    var client = Skiplagged()
     let maxSearchAltitude: Double = 75000
+    var searchCountdown: Timer? = nil
+
+    @IBOutlet weak var scanButton: UIButton!
 
     
     override func viewDidLoad() {
@@ -38,54 +41,15 @@ class MapViewController: UIViewController {
             gotoCurrentLocation(self)
         }
         
+        self.initializeSkiplaggedConnection()
         
-        
-        self.client.loginWithPTC("WhiskeyJuice", password: "pokemon") { () in
-            printTimestamped("Login Successful" + "\n\n")
-            
-            self.client.getSpecificAPIEndpoint() { (specificAPIEndpointResult) in
-                switch specificAPIEndpointResult {
-                case .Failure(let error):
-                    printTimestamped("JUICE- ERROR: " + error.debugDescription)
-                    return
-                case .Success(let answer):
-                    printTimestamped("JUICE- Specific API SUCCESS: " + answer! + "\n\n")
-                    
-                    self.client.getProfile() { (profileResult) in
-                        switch profileResult {
-                        case .Failure(let error):
-                            printTimestamped("JUICE- ERROR: " + error.debugDescription)
-                            return
-                        case .Success(let profile):
-                            print(profile.debugDescription + "\n\n")
-                            
-                            if (self.LocationManager?.location) != nil && self.pokemap.camera.altitude < self.maxSearchAltitude{
-                                let latDelt = self.pokemap.region.span.latitudeDelta/2
-                                let longDelt = self.pokemap.region.span.latitudeDelta/2
-                                let center = self.pokemap.region.center
-                                let bottomLeft: (Double, Double) = (center.latitude - latDelt, center.longitude - longDelt)
-                                let topRight: (Double, Double) = (center.latitude + latDelt, center.longitude + longDelt)
-                                self.client.findPokemon(bounds: ((bottomLeft), (topRight))) {
-                                    foundPokemon in
-                                    for pokemon in foundPokemon {
-                                        Async.main {
-                                            self.pokemap.addAnnotation(pokemon)
-                                        }
-                                    }
-                                }
-                                
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
     
     func checkLocationAuthorization() -> CLLocationManager? {
         let LocationManager = CLLocationManager()
@@ -116,13 +80,89 @@ class MapViewController: UIViewController {
         return LocationManager
     }
     
-    @IBAction func gotoCurrentLocation(_ sender: AnyObject) {
-        
-        self.pokemap.setUserTrackingMode(.followWithHeading, animated: true)
-        
+
+}
+
+// MARK: - Skiplagged functions
+extension MapViewController {
+    
+    func initializeSkiplaggedConnection() {
+        self.client.getSpecificAPIEndpoint() { (specificAPIEndpointResult) in
+            switch specificAPIEndpointResult {
+            case .Failure(let error):
+                printTimestamped("JUICE- ERROR: " + error.debugDescription)
+                return
+            case .Success(let answer):
+                printTimestamped("JUICE- Specific API SUCCESS: " + answer! + "\n\n")
+                
+                self.client.getProfile() { (profileResult) in
+                    switch profileResult {
+                    case .Failure(let error):
+                        printTimestamped("JUICE- ERROR: " + error.debugDescription)
+                        return
+                    case .Success(let profile):
+                        print(profile.debugDescription + "\n\n")
+                        
+                        self.searchMap(self.pokemap)
+                    }
+                }
+            }
+        }
+    }
+
+    func searchMap(_ mapView: MKMapView) {
+        if LocationManager != nil && self.pokemap.camera.altitude < maxSearchAltitude {
+            let latDelt = mapView.region.span.latitudeDelta/2
+            let longDelt = mapView.region.span.latitudeDelta/2
+            let center = mapView.region.center
+            client.findPokemon(bounds: ((center.latitude - latDelt, center.longitude - longDelt),
+                                        (center.latitude + latDelt, center.longitude + longDelt))) {
+                                            foundPokemon in
+                                            Async.main {
+                                                self.scanButton.isHidden = true
+                                            }.background{
+                                                
+                                                for pokemon in foundPokemon {
+                                                    if pokemon.isUnique(pokemons: mapView.annotations) {
+                                                        Async.main {
+                                                            self.pokemap.addAnnotation(pokemon)
+                                                        }
+                                                        
+                                                        if #available(iOS 10.0, *) {
+                                                            pokemon.timer = Timer(fire: pokemon.expireTime, interval: 0.0, repeats: false, block:
+                                                                { (timer) in
+                                                                    Async.main{
+                                                                        self.pokemap.removeAnnotation(pokemon)
+                                                                    }
+                                                            })
+                                                            RunLoop.current.add(pokemon.timer!, forMode: .commonModes)
+                                                        } else {
+                                                            // Fallback on earlier versions
+                                                            pokemon.timer = Timer(fireAt: pokemon.expireTime,
+                                                                                  interval: 0.0, target: self,
+                                                                                  selector: #selector(self.removePokemonfromTimer),
+                                                                                  userInfo: pokemon, repeats: false)
+                                                            
+                                                        }
+                                                    }
+                                                }
+                                            }.main {
+                                                // TODO: Change scan button image, and show
+                                                self.scanButton.isHidden = false
+                                        }
+            }
+        }
+    }
+    
+    func removePokemonfromTimer(timer: Timer){
+        Async.main {
+            self.pokemap.removeAnnotation(timer.userInfo as! Pokemon)
+        }
     }
 }
 
+
+// MARK: - Mapview functions
 extension MapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -145,6 +185,12 @@ extension MapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
         self.client.cancelSearch()
+        if self.searchCountdown != nil {
+            self.searchCountdown!.invalidate()
+            self.searchCountdown = nil
+        }
+        
+        self.scanButton.isHidden = false
     }
     
     
@@ -155,49 +201,28 @@ extension MapViewController: MKMapViewDelegate {
         
         self.client.cancelSearch()
         
-        if LocationManager != nil && self.pokemap.camera.altitude < maxSearchAltitude {
-            let latDelt = mapView.region.span.latitudeDelta/2
-            let longDelt = mapView.region.span.latitudeDelta/2
-            let center = mapView.region.center
-            client.findPokemon(bounds: ((center.latitude - latDelt, center.longitude - longDelt),
-                                        (center.latitude + latDelt, center.longitude + longDelt))) {
-                                            foundPokemon in
-                                            Async.background{
-                                                
-                                                for pokemon in foundPokemon {
-                                                    if pokemon.isUnique(pokemons: mapView.annotations) {
-                                                        Async.main {
-                                                            self.pokemap.addAnnotation(pokemon)
-                                                        }
-                                                        
-                                                        if #available(iOS 10.0, *) {
-                                                            pokemon.timer = Timer(fire: pokemon.expireTime, interval: 0.0, repeats: false, block:
-                                                                { (timer) in
-                                                                    self.pokemap.removeAnnotation(pokemon)
-                                                            })
-                                                            RunLoop.current.add(pokemon.timer!, forMode: RunLoopMode.commonModes)
-                                                        } else {
-                                                            // Fallback on earlier versions
-                                                            pokemon.timer = Timer(fireAt: pokemon.expireTime,
-                                                                                  interval: 0.0, target: self,
-                                                                                  selector: #selector(self.removePokemonfromTimer),
-                                                                                  userInfo: pokemon, repeats: false)
-                                                            
-                                                        }
-                                                    }
-                                                }
-                                            }
+        if #available(iOS 10.0, *) {
+            self.searchCountdown = Timer(fire: Date(timeIntervalSinceNow: 3), interval: 0.0, repeats: false) { (timer) in
+                self.searchMap(mapView)
             }
+            RunLoop.current.add(self.searchCountdown!, forMode: .commonModes)
+        } else {
+            // TODO: Timer: Fallback on earlier versions
         }
-        
     }
     
-    func removePokemonfromTimer(timer: Timer){
-        self.pokemap.removeAnnotation(timer.userInfo as! Pokemon)
-    }
+    
 }
 
+
+// MARK: - Location Functions
 extension MapViewController: CLLocationManagerDelegate {
+    
+    @IBAction func gotoCurrentLocation(_ sender: AnyObject) {
+        
+        self.pokemap.setUserTrackingMode(.followWithHeading, animated: true)
+    }
+    
     func locationManager(_ manager: CLLocationManager, didFailWithError error: NSError) {
         print("Location error: \(error.localizedDescription)")
     }
