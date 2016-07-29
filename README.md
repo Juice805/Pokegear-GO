@@ -1,6 +1,8 @@
 # Pokegear
 A standalone Pokemon GO scanner for iOS
 
+Pokegear aims to be the all-in-one solution for Pokemon GO players. With plans to include scanning filters, background alerts, stat calculators as well as pokemon reference Pokegear GO will change the game.
+
 ### Images
 
 ![Login](/Github Docs/IMG_0035.jpg)
