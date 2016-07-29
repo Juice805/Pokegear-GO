@@ -94,6 +94,11 @@ enum anyResult{
     case Failure(NSError)
 }
 
+enum boolResult{
+    case Success()
+    case Failure(NSError)
+}
+
 
 extension NSError {
     

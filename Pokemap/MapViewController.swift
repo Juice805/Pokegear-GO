@@ -16,6 +16,13 @@ class MapViewController: UIViewController {
     @IBOutlet weak var pokemap: MKMapView!
     
     var LocationManager: CLLocationManager? = nil
+    var client = Skiplagged()
+    let maxSearchAltitude: Double = 75000
+    var searchCountdown: Timer? = nil
+    var firstSearchQueued = false
+
+    @IBOutlet weak var scanButton: UIButton!
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,41 +42,15 @@ class MapViewController: UIViewController {
             gotoCurrentLocation(self)
         }
         
+        self.initializeSkiplaggedConnection()
         
-        let client = Skiplagged()
-        
-        client.loginWithPTC("WhiskeyJuice", password: "pokemon") { () in
-            printTimestamped("Login Successful" + "\n\n")
-            
-            client.getSpecificAPIEndpoint() { (specificAPIEndpointResult) in
-                switch specificAPIEndpointResult {
-                case .Failure(let error):
-                    printTimestamped("JUICE- ERROR: " + error.debugDescription)
-                    return
-                case .Success(let answer):
-                    printTimestamped("JUICE- Specific API SUCCESS: " + answer! + "\n\n")
-                
-                    client.getProfile() { (profileResult) in
-                        switch profileResult {
-                        case .Failure(let error):
-                            printTimestamped("JUICE- ERROR: " + error.debugDescription)
-                            return
-                        case .Success(let profile):
-                            print(profile.debugDescription + "\n\n")
-                            
-                            client.findPokemon(bounds: ((34.408359, -119.869816), (34.420923, -119.840293)))
-                            
-                        }
-                    }
-                }
-            }
-        }
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
     
     func checkLocationAuthorization() -> CLLocationManager? {
         let LocationManager = CLLocationManager()
@@ -87,7 +68,7 @@ class MapViewController: UIViewController {
                 // User has denied access to location
                 print("Authorization not granted")
                 return nil
-            
+                
             }
             
         default:
@@ -99,94 +80,168 @@ class MapViewController: UIViewController {
         
         return LocationManager
     }
+    
 
-    @IBAction func gotoCurrentLocation(_ sender: AnyObject) {
-        
-        self.pokemap.setUserTrackingMode(.followWithHeading, animated: true)
-        
+}
+
+// MARK: - Skiplagged functions
+extension MapViewController {
+    
+    func initializeSkiplaggedConnection() {
+        self.client.getSpecificAPIEndpoint() { (specificAPIEndpointResult) in
+            switch specificAPIEndpointResult {
+            case .Failure(let error):
+                printTimestamped("JUICE- ERROR: " + error.debugDescription)
+                return
+            case .Success(let answer):
+                printTimestamped("JUICE- Specific API SUCCESS: " + answer! + "\n\n")
+                
+                self.client.getProfile() { (profileResult) in
+                    switch profileResult {
+                    case .Failure(let error):
+                        printTimestamped("JUICE- ERROR: " + error.debugDescription)
+                        return
+                    case .Success(let profile):
+                        print(profile.debugDescription + "\n\n")
+                        
+                        if self.LocationManager?.location != nil {
+                            self.searchMap(self.pokemap)
+                        } else {
+                            self.firstSearchQueued = true
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    func searchMap(_ mapView: MKMapView) {
+        if LocationManager != nil && self.pokemap.camera.altitude < maxSearchAltitude {
+            let latDelt = mapView.region.span.latitudeDelta/2
+            let longDelt = mapView.region.span.latitudeDelta/2
+            let center = mapView.region.center
+            client.findPokemon(bounds: ((center.latitude - latDelt, center.longitude - longDelt),
+                                        (center.latitude + latDelt, center.longitude + longDelt))) {
+                                            foundPokemon in
+                                            Async.main {
+                                                self.scanButton.isHidden = true
+                                            }.background{
+                                                
+                                                for pokemon in foundPokemon {
+                                                    if pokemon.isUnique(pokemons: mapView.annotations) {
+                                                        Async.main {
+                                                            self.pokemap.addAnnotation(pokemon)
+                                                            
+                                                            if #available(iOS 10.0, *) {
+                                                                pokemon.timer = Timer(fire: pokemon.expireTime, interval: 0.0, repeats: false, block:
+                                                                    { (timer) in
+                                                                        self.pokemap.removeAnnotation(pokemon)
+                                                                })
+                                                                RunLoop.current.add(pokemon.timer!, forMode: .commonModes)
+                                                            } else {
+                                                                // Fallback on earlier versions
+                                                                pokemon.timer = Timer(fireAt: pokemon.expireTime,
+                                                                                      interval: 0.0, target: self,
+                                                                                      selector: #selector(self.removePokemonfromTimer),
+                                                                                      userInfo: pokemon, repeats: false)
+                                                                
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }.main {
+                                                // TODO: Change scan button image, and show
+                                                self.scanButton.isHidden = false
+                                        }
+            }
+        }
+    }
+    
+    func removePokemonfromTimer(timer: Timer){
+        Async.main {
+            self.pokemap.removeAnnotation(timer.userInfo as! Pokemon)
+        }
     }
 }
 
+
+// MARK: - Mapview functions
 extension MapViewController: MKMapViewDelegate {
     
-
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        
+         if let pokemon = annotation as? Pokemon {
+            let pokeDetail = MKAnnotationView()
+            pokeDetail.annotation = annotation
+            pokeDetail.isEnabled = true
+            pokeDetail.image = UIImage(named: "\(pokemon.id)")
+            pokeDetail.canShowCallout = true
+            pokeDetail.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+            return pokeDetail
+         } else if annotation is MKUserLocation {
+            return nil
+         } else {
+            // Handle other types of pins
+        }
+        
+        return MKAnnotationView()
+    }
+    
+    func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
+        self.client.cancelSearch()
+        if self.searchCountdown != nil {
+            self.searchCountdown!.invalidate()
+            self.searchCountdown = nil
+        }
+        
+        self.scanButton.isHidden = false
+    }
+    
+    
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        if client.PROFILE_RAW == nil {
+            return
+        }
+        
+        self.client.cancelSearch()
+        
+        if #available(iOS 10.0, *) {
+            self.searchCountdown = Timer(fire: Date(timeIntervalSinceNow: 3), interval: 0.0, repeats: false) { (timer) in
+                self.searchMap(mapView)
+            }
+            RunLoop.current.add(self.searchCountdown!, forMode: .commonModes)
+        } else {
+            // TODO: Timer: Fallback on earlier versions
+        }
+    }
     
     
 }
 
+
+// MARK: - Location Functions
 extension MapViewController: CLLocationManagerDelegate {
+    
+    @IBAction func gotoCurrentLocation(_ sender: AnyObject) {
+        
+        self.pokemap.setUserTrackingMode(.followWithHeading, animated: true)
+    }
+    
     func locationManager(_ manager: CLLocationManager, didFailWithError error: NSError) {
         print("Location error: \(error.localizedDescription)")
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
+        if self.firstSearchQueued {
+            self.firstSearchQueued = false
+            searchMap(self.pokemap)
+        }
     }
 }
 
 extension MapViewController {
-    func testCallSkipplagged(client: Skiplagged){
-        let data: [String:AnyObject] = ["access_token": client.ACCESS_TOKEN!,
-                    "auth_provider": client.AUTH_PROVIDER!
-        ]
-        
-        print("JUICE- INPUT DATA: " + data.debugDescription)
-        
-        client.call(Skiplagged.SKIPLAGGED_API, data: data) { (anyResult) in
-            switch anyResult {
-            case .Failure(let error):
-                printTimestamped(error.debugDescription)
-                break
-            case .Success(let data):
-                if let json = data as? [String: AnyObject] {
-                    print("JUICE- RESULT: " + json.debugDescription)
-                    
-                    
-                    client.call(Skiplagged.GENERAL_API, data: json["pdata"]!) { (jsonResult) in
-                        switch jsonResult {
-                        case .Failure(let error):
-                            printTimestamped("JUICE- ERROR: " + error.debugDescription)
-                            break
-                        case .Success(let data):
-                            if let json = JSON(data!).dictionaryObject {
-                                print("JUICE- RESULT: " + json.description)
-                            } else {
-                                printTimestamped("JUICE- ERROR: " + data.debugDescription)
-                            }
-                            break
-                            
-                        }
-                    }
-                } else {
-                    printTimestamped("JUICE- ERROR: " + data.debugDescription)
-                }
-                break
-                
-            }
-        }
-    }
     
-    func testCallNiantic(client: Skiplagged){
-        let data: [String:AnyObject] = ["access_token": client.ACCESS_TOKEN!,
-                                        "auth_provider": client.AUTH_PROVIDER!
-        ]
-        
-        print("JUICE- INPUT DATA: " + data.debugDescription)
-        
-        client.call(Skiplagged.SKIPLAGGED_API, data: data) { (jsonResult) in
-            switch jsonResult {
-            case .Failure(let error):
-                printTimestamped(error.debugDescription)
-                break
-            case .Success(let data):
-                if let json = JSON(data!).dictionaryObject {
-                    print("JUICE- RESULT: " + json.description)
-                } else {
-                    printTimestamped("JUICE- ERROR: " + data.debugDescription)
-                }
-                break
-                
-            }
-        }
-    }
 }
+
+
+
