@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D076878A1D3F5AEB0082AF4F"
-               BuildableName = "Pokemap.app"
-               BlueprintName = "Pokemap"
-               ReferencedContainer = "container:Pokemap.xcodeproj">
+               BuildableName = "Pokegear GO.app"
+               BlueprintName = "Pokegear GO"
+               ReferencedContainer = "container:Pokegear GO.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D076878A1D3F5AEB0082AF4F"
-            BuildableName = "Pokemap.app"
-            BlueprintName = "Pokemap"
-            ReferencedContainer = "container:Pokemap.xcodeproj">
+            BuildableName = "Pokegear GO.app"
+            BlueprintName = "Pokegear GO"
+            ReferencedContainer = "container:Pokegear GO.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -56,9 +56,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D076878A1D3F5AEB0082AF4F"
-            BuildableName = "Pokemap.app"
-            BlueprintName = "Pokemap"
-            ReferencedContainer = "container:Pokemap.xcodeproj">
+            BuildableName = "Pokegear GO.app"
+            BlueprintName = "Pokegear GO"
+            ReferencedContainer = "container:Pokegear GO.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -75,9 +75,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D076878A1D3F5AEB0082AF4F"
-            BuildableName = "Pokemap.app"
-            BlueprintName = "Pokemap"
-            ReferencedContainer = "container:Pokemap.xcodeproj">
+            BuildableName = "Pokegear GO.app"
+            BlueprintName = "Pokegear GO"
+            ReferencedContainer = "container:Pokegear GO.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

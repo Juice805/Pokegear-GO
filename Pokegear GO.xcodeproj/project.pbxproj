@@ -146,9 +146,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D076878A1D3F5AEB0082AF4F /* Pokemap */ = {
+		D076878A1D3F5AEB0082AF4F /* Pokegear GO */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D07687A01D3F5AEB0082AF4F /* Build configuration list for PBXNativeTarget "Pokemap" */;
+			buildConfigurationList = D07687A01D3F5AEB0082AF4F /* Build configuration list for PBXNativeTarget "Pokegear GO" */;
 			buildPhases = (
 				3FFE90FE0698290017D4E57C /* [CP] Check Pods Manifest.lock */,
 				D07687871D3F5AEB0082AF4F /* Sources */,
@@ -162,7 +162,7 @@
 			);
 			dependencies = (
 			);
-			name = Pokemap;
+			name = "Pokegear GO";
 			productName = Pokemap;
 			productReference = D076878B1D3F5AEB0082AF4F /* Pokemap.app */;
 			productType = "com.apple.product-type.application";
@@ -185,7 +185,7 @@
 					};
 				};
 			};
-			buildConfigurationList = D07687861D3F5AEB0082AF4F /* Build configuration list for PBXProject "Pokemap" */;
+			buildConfigurationList = D07687861D3F5AEB0082AF4F /* Build configuration list for PBXProject "Pokegear GO" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -198,7 +198,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D076878A1D3F5AEB0082AF4F /* Pokemap */,
+				D076878A1D3F5AEB0082AF4F /* Pokegear GO */,
 			);
 		};
 /* End PBXProject section */
@@ -437,7 +437,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D07687861D3F5AEB0082AF4F /* Build configuration list for PBXProject "Pokemap" */ = {
+		D07687861D3F5AEB0082AF4F /* Build configuration list for PBXProject "Pokegear GO" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D076879E1D3F5AEB0082AF4F /* Debug */,
@@ -446,7 +446,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D07687A01D3F5AEB0082AF4F /* Build configuration list for PBXNativeTarget "Pokemap" */ = {
+		D07687A01D3F5AEB0082AF4F /* Build configuration list for PBXNativeTarget "Pokegear GO" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D07687A11D3F5AEB0082AF4F /* Debug */,

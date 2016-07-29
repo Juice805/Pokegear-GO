@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Pokemap.xcodeproj">
+      location = "group:/Users/justin/Cloud/Git/Pokemap/Pokegear GO.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
