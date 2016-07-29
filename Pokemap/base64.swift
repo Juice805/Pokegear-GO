@@ -9,7 +9,7 @@
 import Foundation
 
 extension String {
-    
+
     func base64Encoded() -> String? {
         let plainData = data(using: String.Encoding.utf8)
         //let base64String = plainData?.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.fromRaw(0)!)
@@ -17,7 +17,7 @@ extension String {
 
         return base64String!
     }
-    
+
     func base64Decoded() -> String? {
         //let decodedData = NSData(base64EncodedString: self, options:NSDataBase64DecodingOptions.fromRaw(0)!)
         let decodedData = Data(base64Encoded: self, options: Data.Base64DecodingOptions(rawValue: 0))

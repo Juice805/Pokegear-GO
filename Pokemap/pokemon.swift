@@ -10,30 +10,34 @@ import Foundation
 import MapKit
 
 class Pokemon: NSObject, MKAnnotation {
-    
+
     let coordinate: CLLocationCoordinate2D
     private var info: [String: AnyObject]
-    let id: Int
+    let dexID: Int
     let name: String
     let expireTime: Date
     var timer: Timer? = nil
     var title: String? {
-        return self.name.replacingOccurrences(of: " M", with: "♂").replacingOccurrences(of: " F", with: "♀") + " " + self.expiresIn()
+        return self.name.replacingOccurrences(of: " M", with: "♂")
+			.replacingOccurrences(of: " F", with: "♀") + " " + self.expiresIn()
     }
-    
-    init(info: [String: AnyObject]) {
+
+    init?(info: [String: AnyObject]) {
         self.info = info
-        
-        let lat = info["latitude"] as! Double
-        let long = info["longitude"] as! Double
+
+		guard let lat = info["latitude"] as? Double,
+		let long = info["longitude"] as? Double,
+		let id = info["pokemon_id"] as? Int,
+		let name = info["pokemon_name"] as? String,
+		let expireTimestamp = info["expires"] as? Int
+		else {
+			return nil
+		}
+
+		self.name = name
+		self.dexID = id
         self.coordinate = CLLocationCoordinate2D(latitude: Double(lat), longitude: Double(long))
-        
-        self.id = info["pokemon_id"] as! Int
-        self.name = info["pokemon_name"] as! String
-        
-        let expireTimestamp = info["expires"] as! Int
         self.expireTime = Date(timeIntervalSince1970: TimeInterval(expireTimestamp))
-        
     }
 
     func expiresIn() -> String {
@@ -42,18 +46,19 @@ class Pokemon: NSObject, MKAnnotation {
         let second = self.expireTime.timeIntervalSinceNow.truncatingRemainder(dividingBy: 60)
         return String(format: "%02d:%02d", Int(minute), Int(second))
     }
-    
+
     func about() -> String {
-        return "\(self.name) [\(self.id)] at (\(self.coordinate.latitude), \(self.coordinate.longitude)), \(expiresIn()) seconds remaining"
+		return String(format: "%s [%d] at %f, %f. %s remaining",
+		              self.name, self.dexID, self.coordinate.latitude, self.coordinate.longitude, expiresIn())
     }
-    
+
     func isUnique(pokemons: [MKAnnotation]) -> Bool {
         for pokemon in pokemons {
             if let poke = pokemon as? Pokemon {
-                
-                let timeDiff = Calendar.current.components([.second], from: poke.expireTime, to: self.expireTime, options: [])
-                
-                if poke.id == self.id
+
+				let timeDiff = Calendar.current.components([.second], from: poke.expireTime, to: self.expireTime, options: [])
+
+                if poke.dexID == self.dexID
                     && poke.coordinate.latitude == self.coordinate.latitude
                     && poke.coordinate.longitude == self.coordinate.longitude
                     && timeDiff.second! < 10 {
@@ -61,9 +66,8 @@ class Pokemon: NSObject, MKAnnotation {
                 }
             }
         }
-        
+
         return true
     }
-    
-    
+
 }

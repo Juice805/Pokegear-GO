@@ -19,20 +19,19 @@ func getRequestsSession(_ userAgent: String? = nil) -> Manager {
         "nianticlabs.com": .disableEvaluation,
         "skiplagged.com": .disableEvaluation
     ]
-    
+
     // Create custom manager
     let configuration = URLSessionConfiguration.default
     configuration.httpAdditionalHeaders = Alamofire.Manager.defaultHTTPHeaders
     configuration.httpAdditionalHeaders!["User-Agent"] = userAgent
-    
+
     print("JUICE- ADDITIONAL HEADERS"+configuration.httpAdditionalHeaders!.debugDescription)
     let man = Alamofire.Manager(
         configuration: configuration,
         serverTrustPolicyManager: ServerTrustPolicyManager(policies: serverTrustPolicies)
     )
-    
-    return man
 
+    return man
 }
 
 func shortTime() -> String {
@@ -52,7 +51,8 @@ enum PokemapError: ErrorProtocol {
     case invalidJSON
     case expectedJSONKey
     case noProfileData
-    
+	var description: String { return self.error.debugDescription }
+
     var error: NSError {
         switch self {
         case .emptyUsername:
@@ -73,39 +73,36 @@ enum PokemapError: ErrorProtocol {
             return NSError.errorWithCode(12, failureReason: "No Profile data received")
         }
     }
-    
-    
-    var description: String { return self.error.debugDescription }
+
 }
 
 
-enum stringResult{
+enum StringResult {
     case Success(String?)
     case Failure(NSError)
 }
 
-enum jsonResult{
+enum JSONResult {
     case Success([String: AnyObject]?)
     case Failure(NSError)
 }
 
-enum anyResult{
+enum AnyResult {
     case Success(AnyObject?)
     case Failure(NSError)
 }
 
-enum boolResult{
+enum BoolResult {
     case Success()
     case Failure(NSError)
 }
 
 
 extension NSError {
-    
+
     static func errorWithCode(_ code: Int, failureReason: String) -> NSError {
         let userInfo = [NSLocalizedFailureReasonErrorKey: failureReason]
         return NSError(domain: "pokemongoswiftapi.catch.em", code: code, userInfo: userInfo)
     }
-    
-    
+
 }

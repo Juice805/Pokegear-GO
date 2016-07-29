@@ -156,6 +156,7 @@
 				D07687891D3F5AEB0082AF4F /* Resources */,
 				BB0E92FCF77A346150E43C40 /* [CP] Embed Pods Frameworks */,
 				AD4643A97C71312A7723FBCD /* [CP] Copy Pods Resources */,
+				D0CCA9481D4BCBAC00F3015E /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -261,6 +262,19 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Pokemap/Pods-Pokemap-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		D0CCA9481D4BCBAC00F3015E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -399,7 +413,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Pokemap/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = me.justinoroz.Pokemap;
+				PRODUCT_BUNDLE_IDENTIFIER = me.justinoroz.pokegear;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -413,7 +427,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Pokemap/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = me.justinoroz.Pokemap;
+				PRODUCT_BUNDLE_IDENTIFIER = me.justinoroz.pokegear;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;

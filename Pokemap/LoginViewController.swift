@@ -11,7 +11,7 @@ import Async
 import MapKit
 
 class LoginViewController: UIViewController {
-    
+
     let client = Skiplagged()
 
     @IBOutlet weak var teamImage: UIImageView!
@@ -21,69 +21,51 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var passwordField: UITextField!
     @IBOutlet weak var secretButton: UIButton!
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
-    
+
     let locationMananger = CLLocationManager()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        if let team = UserDefaults.standard.string(forKey: "team") {
-            switch team {
-            case "harmony":
-                self.teamImage.image = UIImage(named: "Harmony_large")
-                self.loadingIndicator.color = #colorLiteral(red: 0.2431372549, green: 0.6431372549, blue: 0.6823529412, alpha: 1)
-            case "valor":
-                self.teamImage.image = UIImage(named: "Valor_large")
-                self.loadingIndicator.color = #colorLiteral(red: 0.9137254902, green: 0.1725490196, blue: 0.1725490196, alpha: 1)
-            case "mystic":
-                self.teamImage.image = UIImage(named: "Mystic_large")
-                self.loadingIndicator.color = #colorLiteral(red: 0.231372549, green: 0.4588235294, blue: 0.7450980392, alpha: 1)
-            case "instinct":
-                self.teamImage.image = UIImage(named: "Instinct_large")
-                self.loadingIndicator.color = #colorLiteral(red: 0.9921568627, green: 0.831372549, blue: 0.1254901961, alpha: 1)
-            default:
-                self.teamImage.image = UIImage(named: "Harmony_large")
-                self.loadingIndicator.color = #colorLiteral(red: 0.2431372549, green: 0.6431372549, blue: 0.6823529412, alpha: 1)
-            }
-        }
 
-        
-        showLoading(true)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-
-        // Do any additional setup after loading the view.
-        
-        if let username = UserDefaults.standard.string(forKey: "username")
-        , let password = UserDefaults.standard.string(forKey: "password"),
-        let provider = UserDefaults.standard.string(forKey: "provider"){
-            
-            self.usernameField.text = username
-            
-            switch provider {
-            case "ptc":
-                    trainerClubLogin(username: username, password: password)
-            case "google":
-                    // TODO: Google
-                    googleLogin(username: username, password: password)
-                break
-            default:
-                break
-            }
-            
-        } else {
-            showLoading(false)
-        }
-        
-        
-    }
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		if let team = UserDefaults.standard.string(forKey: "team") {
+			// swiftlint:disable line_length
+			switch team {
+			case "harmony":
+				self.teamImage.image = UIImage(named: "Harmony_large")
+				self.loadingIndicator.color = #colorLiteral(red: 0.2431372549, green: 0.6431372549, blue: 0.6823529412, alpha: 1)
+			case "valor":
+				self.teamImage.image = UIImage(named: "Valor_large")
+				self.loadingIndicator.color = #colorLiteral(red: 0.9137254902, green: 0.1725490196, blue: 0.1725490196, alpha: 1)
+			case "mystic":
+				self.teamImage.image = UIImage(named: "Mystic_large")
+				self.loadingIndicator.color = #colorLiteral(red: 0.231372549, green: 0.4588235294, blue: 0.7450980392, alpha: 1)
+			case "instinct":
+				self.teamImage.image = UIImage(named: "Instinct_large")
+				self.loadingIndicator.color = #colorLiteral(red: 0.9921568627, green: 0.831372549, blue: 0.1254901961, alpha: 1)
+			default:
+				self.teamImage.image = UIImage(named: "Harmony_large")
+				self.loadingIndicator.color = #colorLiteral(red: 0.2431372549, green: 0.6431372549, blue: 0.6823529412, alpha: 1)
+			}
+			// enable line_length
+		}
+		NotificationCenter.default.addObserver(self,
+		                                       selector: #selector(keyboardWillShow(notification:)),
+		                                       name: NSNotification.Name.UIKeyboardWillShow,
+		                                       object: nil)
+		NotificationCenter.default.addObserver(self,
+		                                       selector: #selector(keyboardWillHide(notification:)),
+		                                       name: NSNotification.Name.UIKeyboardWillHide,
+		                                       object: nil)
+		showLoading(true)
+		if !loginFromUserDefaults() {
+			showLoading(false)
+		}
+	}
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+
     func showLoading(_ answer: Bool) {
         Async.main {
             if answer {
@@ -91,18 +73,16 @@ class LoginViewController: UIViewController {
             } else {
                 self.loadingIndicator.stopAnimating()
             }
-            
-            
             self.usernameField.isHidden = answer
             self.passwordField.isHidden = answer
             self.googleButton.isHidden = answer
             self.ptcButton.isHidden = answer
         }
     }
-    
+
     @IBAction func changeTeamImage() {
         //TODO: Change Image
-        
+
         if let team = UserDefaults.standard.string(forKey: "team") {
             switch team {
             case "harmony":
@@ -132,7 +112,7 @@ class LoginViewController: UIViewController {
             UserDefaults.standard.set("valor", forKey: "team")
         }
     }
-    
+
     @IBAction func whyNotPrimary(_ sender: AnyObject) {
         // TODO: Show popup explaining the system
     }
@@ -156,12 +136,10 @@ extension LoginViewController {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
         if let pokemap = segue.destinationViewController as? MapViewController {
-            
+
             pokemap.client = self.client
         }
     }
-    
-
 }
 
 
@@ -171,7 +149,6 @@ extension LoginViewController {
     @IBAction func beginLogin(_ sender: UIButton) {
         self.locationMananger.requestAlwaysAuthorization()
         showLoading(true)
-        
         guard let username = usernameField.text,
             let password = passwordField.text,
             username != "",
@@ -181,8 +158,6 @@ extension LoginViewController {
                 showLoading(false)
                 return
         }
-        
-        
         if let id = sender.restorationIdentifier {
             switch id {
             case "ptc":
@@ -193,14 +168,32 @@ extension LoginViewController {
             default: return
             }
         }
-        
     }
-    
-    
+
+	func loginFromUserDefaults() -> (Bool) {
+		if let username = UserDefaults.standard.string(forKey: "username"),
+			let password = UserDefaults.standard.string(forKey: "password"),
+			let provider = UserDefaults.standard.string(forKey: "provider") {
+			self.usernameField.text = username
+			switch provider {
+			case "ptc":
+				trainerClubLogin(username: username, password: password)
+			case "google":
+				// TODO: Google
+				googleLogin(username: username, password: password)
+				break
+			default:
+				break
+			}
+			return true
+		} else {
+			return false
+		}
+	}
+
     func trainerClubLogin(username: String, password: String) {
         printTimestamped(username + ", " + password)
 
-        
         client.loginWithPTC(usernameField.text!, password: passwordField.text!) {
             result in
             switch result {
@@ -215,19 +208,19 @@ extension LoginViewController {
                     // TODO: Store password securely
                     UserDefaults.standard.setValue(self.passwordField.text, forKey: "password")
                     UserDefaults.standard.setValue("ptc", forKey: "provider")
-                    
+
                     while CLLocationManager.authorizationStatus() == .notDetermined {
                         self.locationMananger.requestAlwaysAuthorization()
                         // TODO: Check Logic
                     }
-                    
+
                     self.performSegue(withIdentifier: "loggedin", sender: self)
                 }
             }
-            
+
         }
     }
-    
+
     func googleLogin(username: String, password: String) {
         //TODO: Google Login
     }
@@ -251,43 +244,38 @@ extension LoginViewController {
     @IBAction func dismissKeyboard() {
         self.view.endEditing(false)
     }
-    
+
     @IBAction func nextField(_ sender: UITextField) {
         if sender.restorationIdentifier == "username" {
             passwordField.becomeFirstResponder()
         }
     }
-    
+
     func keyboardWillShow(notification: NSNotification) {
         secretButton.isHidden = true
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue() {
             //if view.frame.origin.y == 0{
-            
+
             // checks if view needs to move
             // origin is top left
             let googleButtonHeight = self.view.bounds.height - (self.googleButton.frame.origin.y + self.googleButton.frame.height)
-            
-            if keyboardSize.height > googleButtonHeight - 20{
-                if view.bounds.origin.y == 0{
-                    
+
+            if keyboardSize.height > googleButtonHeight - 20 {
+                if view.bounds.origin.y == 0 {
+
                     let offset =  20 + keyboardSize.height - googleButtonHeight
 
-                    
                     UIView.animate(withDuration: 0.5, animations: {
                         // self.view.frame.origin.y -= keyboardSize.height - 150
-                        
                         self.view.bounds = self.view.bounds.offsetBy(dx: 0, dy: offset)
                     })
-                    
-                }
-                else {
-                    
+                } else {
+
                 }
             }
         }
-        
     }
-    
+
     func keyboardWillHide(notification: NSNotification) {
         secretButton.isHidden = false
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue() {
@@ -295,25 +283,23 @@ extension LoginViewController {
             if view.bounds.origin.y != 0 {
                 // origin is top left
                 let googleButtonHeight = self.view.bounds.height - (self.googleButton.frame.origin.y + self.googleButton.frame.height)
-                
+
                 let offset =  20 + keyboardSize.height - googleButtonHeight
 
 
                 UIView.animate(withDuration: 0.5, animations: {
-                    
-                    self.view.bounds = self.view.bounds.offsetBy(dx: 0, dy: -offset)
-                    
-                })
 
-            }
-            else {
-                
+                    self.view.bounds = self.view.bounds.offsetBy(dx: 0, dy: -offset)
+
+                })
+            } else {
+
             }
         }
     }
-    
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+
+	override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
         return .portrait
     }
-    
+
 }

@@ -9,8 +9,6 @@
 import Foundation
 
 protocol Auth {
-    func getAccessToken(_ username: String, password: String, completion: (tokenResult: stringResult) -> ())
+    func getAccessToken(_ username: String, password: String, completion: (tokenResult: StringResult) -> ())
     static func getAuthProvider() -> String
 }
-
-
