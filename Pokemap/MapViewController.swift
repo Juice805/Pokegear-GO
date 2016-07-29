@@ -19,6 +19,7 @@ class MapViewController: UIViewController {
     var client = Skiplagged()
     let maxSearchAltitude: Double = 75000
     var searchCountdown: Timer? = nil
+    var firstSearchQueued = false
 
     @IBOutlet weak var scanButton: UIButton!
 
@@ -103,7 +104,11 @@ extension MapViewController {
                     case .Success(let profile):
                         print(profile.debugDescription + "\n\n")
                         
-                        self.searchMap(self.pokemap)
+                        if self.LocationManager?.location != nil {
+                            self.searchMap(self.pokemap)
+                        } else {
+                            self.firstSearchQueued = true
+                        }
                     }
                 }
             }
@@ -126,23 +131,21 @@ extension MapViewController {
                                                     if pokemon.isUnique(pokemons: mapView.annotations) {
                                                         Async.main {
                                                             self.pokemap.addAnnotation(pokemon)
-                                                        }
-                                                        
-                                                        if #available(iOS 10.0, *) {
-                                                            pokemon.timer = Timer(fire: pokemon.expireTime, interval: 0.0, repeats: false, block:
-                                                                { (timer) in
-                                                                    Async.main{
-                                                                        self.pokemap.removeAnnotation(pokemon)
-                                                                    }
-                                                            })
-                                                            RunLoop.current.add(pokemon.timer!, forMode: .commonModes)
-                                                        } else {
-                                                            // Fallback on earlier versions
-                                                            pokemon.timer = Timer(fireAt: pokemon.expireTime,
-                                                                                  interval: 0.0, target: self,
-                                                                                  selector: #selector(self.removePokemonfromTimer),
-                                                                                  userInfo: pokemon, repeats: false)
                                                             
+                                                            if #available(iOS 10.0, *) {
+                                                                pokemon.timer = Timer(fire: pokemon.expireTime, interval: 0.0, repeats: false, block:
+                                                                    { (timer) in
+                                                                        self.pokemap.removeAnnotation(pokemon)
+                                                                })
+                                                                RunLoop.current.add(pokemon.timer!, forMode: .commonModes)
+                                                            } else {
+                                                                // Fallback on earlier versions
+                                                                pokemon.timer = Timer(fireAt: pokemon.expireTime,
+                                                                                      interval: 0.0, target: self,
+                                                                                      selector: #selector(self.removePokemonfromTimer),
+                                                                                      userInfo: pokemon, repeats: false)
+                                                                
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -167,20 +170,21 @@ extension MapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         
-        if annotation is MKUserLocation {
-            return nil
-        }
-        
-        
-        let pokeDetail = MKAnnotationView()
-        
-        if let pokemon = annotation as? Pokemon {
+         if let pokemon = annotation as? Pokemon {
+            let pokeDetail = MKAnnotationView()
+            pokeDetail.annotation = annotation
+            pokeDetail.isEnabled = true
             pokeDetail.image = UIImage(named: "\(pokemon.id)")
-        } else {
-            
+            pokeDetail.canShowCallout = true
+            pokeDetail.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+            return pokeDetail
+         } else if annotation is MKUserLocation {
+            return nil
+         } else {
+            // Handle other types of pins
         }
         
-        return pokeDetail
+        return MKAnnotationView()
     }
     
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
@@ -228,7 +232,10 @@ extension MapViewController: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
+        if self.firstSearchQueued {
+            self.firstSearchQueued = false
+            searchMap(self.pokemap)
+        }
     }
 }
 

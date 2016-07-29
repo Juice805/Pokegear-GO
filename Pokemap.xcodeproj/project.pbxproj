@@ -22,6 +22,7 @@
 		D07687B01D41791E0082AF4F /* google.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07687AF1D41791E0082AF4F /* google.swift */; };
 		D07687B31D4179370082AF4F /* ptc.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07687B21D4179370082AF4F /* ptc.swift */; };
 		D09A63DB1D4A5B4C007DDC47 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09A63DA1D4A5B4C007DDC47 /* LoginViewController.swift */; };
+		D09BB06C1D4B3999007998BE /* PokemonAnnotationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D09BB06B1D4B3999007998BE /* PokemonAnnotationView.xib */; };
 		D09E3CE81D46B94600DE9150 /* base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09E3CE71D46B94600DE9150 /* base64.swift */; };
 		D0CBC3AB1D41B14E000303AF /* skiplagged.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC3AA1D41B14E000303AF /* skiplagged.swift */; };
 /* End PBXBuildFile section */
@@ -46,6 +47,7 @@
 		D07687AF1D41791E0082AF4F /* google.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = google.swift; sourceTree = "<group>"; };
 		D07687B21D4179370082AF4F /* ptc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ptc.swift; sourceTree = "<group>"; };
 		D09A63DA1D4A5B4C007DDC47 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		D09BB06B1D4B3999007998BE /* PokemonAnnotationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PokemonAnnotationView.xib; sourceTree = "<group>"; };
 		D09E3CE71D46B94600DE9150 /* base64.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = base64.swift; sourceTree = "<group>"; };
 		D0CBC3A91D41AA3F000303AF /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = MyPlayground.playground; path = Pokemap/MyPlayground.playground; sourceTree = "<group>"; };
 		D0CBC3AA1D41B14E000303AF /* skiplagged.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = skiplagged.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 				D07687A91D4178C90082AF4F /* auth */,
 				D076878E1D3F5AEB0082AF4F /* AppDelegate.swift */,
 				D07687901D3F5AEB0082AF4F /* MapViewController.swift */,
+				D09BB06B1D4B3999007998BE /* PokemonAnnotationView.xib */,
 				D07687921D3F5AEB0082AF4F /* Main.storyboard */,
 				D09A63DA1D4A5B4C007DDC47 /* LoginViewController.swift */,
 				D07687981D3F5AEB0082AF4F /* Assets.xcassets */,
@@ -205,6 +208,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D076879C1D3F5AEB0082AF4F /* LaunchScreen.storyboard in Resources */,
+				D09BB06C1D4B3999007998BE /* PokemonAnnotationView.xib in Resources */,
 				D07687991D3F5AEB0082AF4F /* Assets.xcassets in Resources */,
 				D07687941D3F5AEB0082AF4F /* Main.storyboard in Resources */,
 			);

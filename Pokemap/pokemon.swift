@@ -17,6 +17,9 @@ class Pokemon: NSObject, MKAnnotation {
     let name: String
     let expireTime: Date
     var timer: Timer? = nil
+    var title: String? {
+        return self.name.replacingOccurrences(of: " M", with: "♂").replacingOccurrences(of: " F", with: "♀") + " " + self.expiresIn()
+    }
     
     init(info: [String: AnyObject]) {
         self.info = info
@@ -27,6 +30,7 @@ class Pokemon: NSObject, MKAnnotation {
         
         self.id = info["pokemon_id"] as! Int
         self.name = info["pokemon_name"] as! String
+        
         let expireTimestamp = info["expires"] as! Int
         self.expireTime = Date(timeIntervalSince1970: TimeInterval(expireTimestamp))
         
@@ -34,7 +38,9 @@ class Pokemon: NSObject, MKAnnotation {
 
     func expiresIn() -> String {
         // TODO: use NSTimer for countdown
-        return ""
+        let minute = self.expireTime.timeIntervalSinceNow / 60
+        let second = self.expireTime.timeIntervalSinceNow.truncatingRemainder(dividingBy: 60)
+        return String(format: "%02d:%02d", Int(minute), Int(second))
     }
     
     func about() -> String {
