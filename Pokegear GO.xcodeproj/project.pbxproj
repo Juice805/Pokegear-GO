@@ -113,13 +113,11 @@
 				D0545FBE1D447BF8001B8497 /* config.swift */,
 				D07687AA1D4178D30082AF4F /* utils */,
 				D07687A91D4178C90082AF4F /* auth */,
+				D093B1D01D4E8E6300488FD8 /* ViewControllers */,
 				D076878E1D3F5AEB0082AF4F /* AppDelegate.swift */,
-				D07687901D3F5AEB0082AF4F /* MapViewController.swift */,
 				D09BB06B1D4B3999007998BE /* PokemonAnnotationView.xib */,
-				D07687921D3F5AEB0082AF4F /* Main.storyboard */,
-				D09A63DA1D4A5B4C007DDC47 /* LoginViewController.swift */,
+				D093B1D11D4E8E8600488FD8 /* Storyboards */,
 				D07687981D3F5AEB0082AF4F /* Assets.xcassets */,
-				D076879A1D3F5AEB0082AF4F /* LaunchScreen.storyboard */,
 				D076879D1D3F5AEB0082AF4F /* Info.plist */,
 				D07687951D3F5AEB0082AF4F /* Pokemap.xcdatamodeld */,
 			);
@@ -155,6 +153,24 @@
 				D08C0D1B1D4D780400AB0559 /* skiplagged+Async.swift */,
 			);
 			name = Skiplagged;
+			sourceTree = "<group>";
+		};
+		D093B1D01D4E8E6300488FD8 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				D07687901D3F5AEB0082AF4F /* MapViewController.swift */,
+				D09A63DA1D4A5B4C007DDC47 /* LoginViewController.swift */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		D093B1D11D4E8E8600488FD8 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				D07687921D3F5AEB0082AF4F /* Main.storyboard */,
+				D076879A1D3F5AEB0082AF4F /* LaunchScreen.storyboard */,
+			);
+			name = Storyboards;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

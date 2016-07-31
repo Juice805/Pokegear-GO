@@ -323,7 +323,7 @@ extension Skiplagged {
 	}
 
 	// swiftlint:disable:next line_length
-	func findPokemon(bounds: ((Double, Double), (Double, Double)), stepSize: Double = 0.002, completion: ([Pokemon]) -> ()) {
+	func findPokemon(bounds: ((Double, Double), (Double, Double)), stepSize: Double = 0.002, progress: (Double) -> (), completion: ([Pokemon]) -> ()) {
 		// bottom Left, topRight
 
 		if inhibitScan {
@@ -378,8 +378,11 @@ extension Skiplagged {
 			}
 
 			printTimestamped("Requests: \(requests.count)")
+			var requestNumber = 0
 
 			scan: for request in requests {
+				requestNumber += 1
+				progress(Double(requestNumber) / Double(requests.count))
 
 				if inhibitScan {
 					inhibitScan = false
@@ -440,7 +443,7 @@ extension Skiplagged {
 
 							pokeDataRecieved = true
 
-							printTimestamped("Found \(respDict["pokemons"]!.count!) Pokemon")
+							printTimestamped("Found \(pokemons.count) Pokemon")
 							var foundPokemon: [Pokemon] = []
 							for pokemon in pokemons {
 								if let poke = pokemon["pokemon_name"] as? String {

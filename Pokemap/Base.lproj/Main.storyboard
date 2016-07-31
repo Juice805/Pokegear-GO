@@ -11,7 +11,7 @@
         <!--Login-->
         <scene sceneID="mJR-5K-FwT">
             <objects>
-                <viewController title="Login" id="KoL-nA-Oun" customClass="LoginViewController" customModule="Pokemap" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Login" id="KoL-nA-Oun" customClass="LoginViewController" customModule="Pokegear_GO" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="deL-to-hAv"/>
                         <viewControllerLayoutGuide type="bottom" id="Wm8-nX-5CD"/>
@@ -104,8 +104,7 @@
                                 </constraints>
                                 <color key="color" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </activityIndicatorView>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YVq-ea-i1Z">
-                                <frame key="frameInset" minX="152" minY="112" width="72" height="79"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YVq-ea-i1Z">
                                 <connections>
                                     <action selector="changeTeamImage" destination="KoL-nA-Oun" eventType="touchUpInside" id="QNt-m5-eW8"/>
                                 </connections>
@@ -176,7 +175,7 @@
         <!--Map-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="pokemap" title="Map" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="MapViewController" customModule="Pokemap" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="pokemap" title="Map" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="MapViewController" customModule="Pokegear_GO" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -185,7 +184,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="95E-Y1-2nN">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="95E-Y1-2nN">
+                                <frame key="frameInset" width="379" height="667"/>
                                 <connections>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="vpf-1I-xwf"/>
                                 </connections>
@@ -196,8 +196,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iY8-ez-QHc"/>
-                            <button opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HzA-CH-BTJ">
-                                <frame key="frameInset" minX="169" minY="615" width="36" height="34"/>
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HzA-CH-BTJ">
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="HzA-CH-BTJ" secondAttribute="height" multiplier="1:1" id="3pw-1p-eTw"/>
                                     <constraint firstAttribute="width" constant="60" id="maj-nx-yS5">
@@ -207,23 +206,33 @@
                                 </constraints>
                                 <state key="normal" image="pokeball"/>
                             </button>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" misplaced="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="OT7-eJ-7ru">
+                                <frame key="frameInset" minY="665" width="375" height="2"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="5" id="Hfw-lq-QNV"/>
+                                </constraints>
+                            </progressView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="iY8-ez-QHc" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="12" id="1qk-vY-GNO"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="95E-Y1-2nN" secondAttribute="bottom" id="4Jq-MM-lIA"/>
+                            <constraint firstAttribute="trailing" secondItem="OT7-eJ-7ru" secondAttribute="trailing" id="5T4-ev-o46"/>
                             <constraint firstItem="95E-Y1-2nN" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="8RW-nV-629"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="iY8-ez-QHc" secondAttribute="bottom" constant="24" id="Bnh-6Z-iPP"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="l8I-Lr-5zE" secondAttribute="bottom" constant="24" id="DPs-AR-0rs"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="OT7-eJ-7ru" secondAttribute="bottom" id="Iy1-tK-GhG"/>
                             <constraint firstItem="HzA-CH-BTJ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="WRi-b5-v7j"/>
                             <constraint firstAttribute="trailingMargin" secondItem="95E-Y1-2nN" secondAttribute="trailing" constant="-20" id="Yyb-nv-AvY"/>
                             <constraint firstItem="95E-Y1-2nN" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="fvn-I4-tKW"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="HzA-CH-BTJ" secondAttribute="bottom" constant="20" id="ivL-58-qm1"/>
+                            <constraint firstItem="OT7-eJ-7ru" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="jDu-Z3-bE5"/>
                             <constraint firstAttribute="trailingMargin" secondItem="l8I-Lr-5zE" secondAttribute="trailing" constant="12" id="jvU-KE-xgN"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="pokemap" destination="95E-Y1-2nN" id="bA6-bq-XQ6"/>
+                        <outlet property="progress" destination="OT7-eJ-7ru" id="Osq-Hk-lig"/>
                         <outlet property="scanButton" destination="HzA-CH-BTJ" id="BqG-Ob-1Wf"/>
                     </connections>
                 </viewController>
@@ -238,7 +247,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Harmony_large" width="2500" height="2267"/>
+        <image name="Harmony_large" width="2082" height="2122"/>
         <image name="pokeball" width="40" height="40"/>
     </resources>
 </document>
