@@ -399,12 +399,18 @@ extension Skiplagged {
 					break
 				case .Success(let pokeData):
 
-					let scan = self.call(Skiplagged.API_SKIPLAGGED, data: ["pdata": pokeData!])
+
+					var pokeDataRecieved = false
+
+					rateLimitCheck: while !pokeDataRecieved {
+						let scan = self.call(Skiplagged.API_SKIPLAGGED, data: ["pdata": pokeData!])
+
 						switch scan {
 						case .Failure(let error):
 
 							//TODO: handle errors
 							printTimestamped("ERROR: " + error.debugDescription)
+
 
 							return
 						case .Success(let response):
@@ -412,12 +418,28 @@ extension Skiplagged {
 							print(response!.debugDescription)
 
 
-							guard let respDict = response as? [String: AnyObject],
-								let pokemons = respDict["pokemons"] as? [[String: AnyObject]] else {
+
+							guard let respDict = response as? [String: AnyObject]
+								 else {
 									//TODO: Handle Error
-									printTimestamped("Couldn't decode pokemon data")
+									printTimestamped("Couldn't decode response")
 									return
 							}
+
+							if let error = respDict["error"] as? String {
+								printTimestamped("Skiplagged: " + error)
+								Thread.sleep(forTimeInterval: 1.0)
+								continue rateLimitCheck
+							}
+
+							guard let pokemons = respDict["pokemons"] as? [[String: AnyObject]]
+							else {
+								printTimestamped("No pokemon data")
+								return
+							}
+
+							pokeDataRecieved = true
+
 							printTimestamped("Found \(respDict["pokemons"]!.count!) Pokemon")
 							var foundPokemon: [Pokemon] = []
 							for pokemon in pokemons {
@@ -429,8 +451,13 @@ extension Skiplagged {
 								}
 							}
 							completion(foundPokemon)
-							Thread.sleep(forTimeInterval: 0.5)
+							Thread.sleep(forTimeInterval: 0.7)
 						}
+					}
+
+
+
+
 					}
 
 

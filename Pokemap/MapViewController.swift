@@ -99,10 +99,14 @@ extension MapViewController {
             let latDelt = mapView.region.span.latitudeDelta/2
             let longDelt = mapView.region.span.latitudeDelta/2
 			let center = mapView.region.center
+			let queue = AsyncGroup()
+
 			Async.background {
+
 				self.client.findPokemon(bounds: ((center.latitude - latDelt, center.longitude - longDelt),
 				                            (center.latitude + latDelt, center.longitude + longDelt))) {
 												foundPokemon in
+												queue.enter()
 												Async.main {
 													self.scanButton.isHidden = true
 												}.background {
@@ -127,11 +131,14 @@ extension MapViewController {
 															}
 														}
 													}
-												}.main {
-													// TODO: Change scan button image, and show
-													self.scanButton.isHidden = false
-											}
+													queue.leave()
+												}
 				}
+				queue.wait()
+			}.main {
+					// TODO: Change scan button image, and show
+
+				self.scanButton.isHidden = false
 			}
 		}
     }

@@ -146,6 +146,24 @@ enum AnyResult {
 			return true
 		}
 	}
+
+	var error: NSError? {
+		switch self {
+		case .Failure(let error):
+			return error
+		case .Success(_):
+			return nil
+		}
+	}
+
+	var data: AnyObject? {
+		switch self {
+		case .Failure(_):
+			return nil
+		case .Success(let ans):
+			return ans
+		}
+	}
 }
 
 enum BoolResult {
