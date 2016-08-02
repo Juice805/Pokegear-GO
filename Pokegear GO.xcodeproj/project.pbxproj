@@ -40,19 +40,6 @@ fi
 			<key>showEnvVarsInLog</key>
 			<string>0</string>
 		</dict>
-		<key>758868CB62631938A11E37ED</key>
-		<dict>
-			<key>explicitFileType</key>
-			<string>wrapper.framework</string>
-			<key>includeInIndex</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>path</key>
-			<string>Pods_Pokegear_GO.framework</string>
-			<key>sourceTree</key>
-			<string>BUILT_PRODUCTS_DIR</string>
-		</dict>
 		<key>96F92B6E85382899F74D7BD7</key>
 		<dict>
 			<key>children</key>
@@ -159,12 +146,11 @@ fi
 		<dict>
 			<key>children</key>
 			<array>
-				<string>D0CBC3A91D41AA3F000303AF</string>
-				<string>D07687A31D3F5C440082AF4F</string>
+				<string>F2B6EAB8F90762905F1A91A8</string>
+				<string>96F92B6E85382899F74D7BD7</string>
 				<string>D076878D1D3F5AEB0082AF4F</string>
 				<string>D076878C1D3F5AEB0082AF4F</string>
-				<string>96F92B6E85382899F74D7BD7</string>
-				<string>F2B6EAB8F90762905F1A91A8</string>
+				<string>D0CBC3A91D41AA3F000303AF</string>
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
@@ -277,7 +263,6 @@ fi
 			<key>files</key>
 			<array>
 				<string>D07687A41D3F5C440082AF4F</string>
-				<string>DA7013A89EB4C1B374829A96</string>
 			</array>
 			<key>isa</key>
 			<string>PBXFrameworksBuildPhase</string>
@@ -360,22 +345,21 @@ fi
 		<dict>
 			<key>children</key>
 			<array>
-				<string>D08E20FB1D4FA92900FC1C28</string>
-				<string>D0545FBE1D447BF8001B8497</string>
-				<string>D07687AA1D4178D30082AF4F</string>
-				<string>D07687A91D4178C90082AF4F</string>
+				<string>D08C0D1A1D4D77EA00AB0559</string>
+				<string>D093B1D11D4E8E8600488FD8</string>
 				<string>D093B1D01D4E8E6300488FD8</string>
 				<string>D076878E1D3F5AEB0082AF4F</string>
-				<string>D09BB06B1D4B3999007998BE</string>
-				<string>D093B1D11D4E8E8600488FD8</string>
 				<string>D07687981D3F5AEB0082AF4F</string>
 				<string>D076879D1D3F5AEB0082AF4F</string>
 				<string>D07687951D3F5AEB0082AF4F</string>
+				<string>D08E20FB1D4FA92900FC1C28</string>
+				<string>D09BB06B1D4B3999007998BE</string>
+				<string>D0545FBE1D447BF8001B8497</string>
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
 			<key>path</key>
-			<string>Pokemap</string>
+			<string>PokegearGo</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
@@ -425,6 +409,8 @@ fi
 			<string>PBXVariantGroup</string>
 			<key>name</key>
 			<string>Main.storyboard</string>
+			<key>path</key>
+			<string>.</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
@@ -489,12 +475,10 @@ fi
 			<string>PBXFileReference</string>
 			<key>lastKnownFileType</key>
 			<string>folder.assetcatalog</string>
-			<key>name</key>
-			<string>Assets.xcassets</string>
 			<key>path</key>
-			<string>Pokemap/Assets.xcassets</string>
+			<string>Assets.xcassets</string>
 			<key>sourceTree</key>
-			<string>SOURCE_ROOT</string>
+			<string>&lt;group&gt;</string>
 		</dict>
 		<key>D07687991D3F5AEB0082AF4F</key>
 		<dict>
@@ -513,6 +497,8 @@ fi
 			<string>PBXVariantGroup</string>
 			<key>name</key>
 			<string>LaunchScreen.storyboard</string>
+			<key>path</key>
+			<string>.</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
@@ -735,7 +721,7 @@ fi
 				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
 				<string>AppIcon</string>
 				<key>INFOPLIST_FILE</key>
-				<string>Pokemap/Info.plist</string>
+				<string>PokegearGo/Info.plist</string>
 				<key>LD_RUNPATH_SEARCH_PATHS</key>
 				<string>$(inherited) @executable_path/Frameworks</string>
 				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
@@ -763,7 +749,7 @@ fi
 				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
 				<string>AppIcon</string>
 				<key>INFOPLIST_FILE</key>
-				<string>Pokemap/Info.plist</string>
+				<string>PokegearGo/Info.plist</string>
 				<key>LD_RUNPATH_SEARCH_PATHS</key>
 				<string>$(inherited) @executable_path/Frameworks</string>
 				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
@@ -807,12 +793,12 @@ fi
 			<key>children</key>
 			<array>
 				<string>D0748E331D417AE200950A4D</string>
-				<string>D07687B21D4179370082AF4F</string>
 				<string>D07687AF1D41791E0082AF4F</string>
+				<string>D07687B21D4179370082AF4F</string>
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
-			<key>name</key>
+			<key>path</key>
 			<string>auth</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
@@ -821,15 +807,14 @@ fi
 		<dict>
 			<key>children</key>
 			<array>
-				<string>D08C0D1A1D4D77EA00AB0559</string>
-				<string>D07687AB1D4178EC0082AF4F</string>
-				<string>D07687AD1D4179060082AF4F</string>
-				<string>D09E3CE71D46B94600DE9150</string>
 				<string>D0FD49E31D508047002FFBBE</string>
+				<string>D09E3CE71D46B94600DE9150</string>
+				<string>D07687AD1D4179060082AF4F</string>
+				<string>D07687AB1D4178EC0082AF4F</string>
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
-			<key>name</key>
+			<key>path</key>
 			<string>utils</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
@@ -918,13 +903,15 @@ fi
 		<dict>
 			<key>children</key>
 			<array>
-				<string>D0CBC3AA1D41B14E000303AF</string>
-				<string>D08C0D1D1D4D796D00AB0559</string>
+				<string>D07687A91D4178C90082AF4F</string>
+				<string>D07687AA1D4178D30082AF4F</string>
 				<string>D08C0D1B1D4D780400AB0559</string>
+				<string>D08C0D1D1D4D796D00AB0559</string>
+				<string>D0CBC3AA1D41B14E000303AF</string>
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
-			<key>name</key>
+			<key>path</key>
 			<string>Skiplagged</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
@@ -1018,7 +1005,7 @@ fi
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
-			<key>name</key>
+			<key>path</key>
 			<string>FilterView</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
@@ -1067,12 +1054,12 @@ fi
 		<dict>
 			<key>children</key>
 			<array>
-				<string>D08E20FD1D4FC58900FC1C28</string>
 				<string>D09A63DA1D4A5B4C007DDC47</string>
+				<string>D08E20FD1D4FC58900FC1C28</string>
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
-			<key>name</key>
+			<key>path</key>
 			<string>LoginView</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
@@ -1081,13 +1068,13 @@ fi
 		<dict>
 			<key>children</key>
 			<array>
-				<string>D08E20FF1D4FC59000FC1C28</string>
 				<string>D08E20FA1D4FA5B100FC1C28</string>
+				<string>D08E20FF1D4FC59000FC1C28</string>
 				<string>D07687901D3F5AEB0082AF4F</string>
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
-			<key>name</key>
+			<key>path</key>
 			<string>ViewControllers</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
@@ -1096,12 +1083,12 @@ fi
 		<dict>
 			<key>children</key>
 			<array>
-				<string>D07687921D3F5AEB0082AF4F</string>
 				<string>D076879A1D3F5AEB0082AF4F</string>
+				<string>D07687921D3F5AEB0082AF4F</string>
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
-			<key>name</key>
+			<key>path</key>
 			<string>Storyboards</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
@@ -1242,13 +1229,6 @@ fi</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 		</dict>
-		<key>DA7013A89EB4C1B374829A96</key>
-		<dict>
-			<key>fileRef</key>
-			<string>758868CB62631938A11E37ED</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
 		<key>EDA556DB918220AB1A2F5D5F</key>
 		<dict>
 			<key>includeInIndex</key>
@@ -1268,7 +1248,7 @@ fi</string>
 		<dict>
 			<key>children</key>
 			<array>
-				<string>758868CB62631938A11E37ED</string>
+				<string>D07687A31D3F5C440082AF4F</string>
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
