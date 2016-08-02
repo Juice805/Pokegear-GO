@@ -7,3 +7,14 @@
 //
 
 import Foundation
+
+class Google: Auth {
+	static func getAuthProvider() -> String {
+		return "google"
+	}
+
+	func getAccessToken(_ username: String, password: String, completion: (tokenResult: StringResult) -> ()) {
+
+		
+	}
+}

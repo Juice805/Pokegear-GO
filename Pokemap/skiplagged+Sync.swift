@@ -8,7 +8,6 @@
 
 import Foundation
 import Alamofire
-import Async
 
 extension Skiplagged {
 	func loginWithPTC(_ username: String, password: String) -> BoolResult {
@@ -17,7 +16,7 @@ extension Skiplagged {
 		let ptcAuth = PokemonTrainerClub()
 		let provider = PokemonTrainerClub.getAuthProvider()
 		var result: BoolResult = .Failure(NSError())
-		let queue = AsyncGroup()
+		let queue = DispatchGroup()
 
 
 		queue.enter()
@@ -77,7 +76,7 @@ extension Skiplagged {
 	func call(_ endpoint: String, data: AnyObject) -> AnyResult {
 		var session: Manager
 		let isSkiplaggedSession = endpoint.contains("skiplagged")
-		let queue = AsyncGroup()
+		let queue = DispatchGroup()
 		var result: AnyResult = .Failure(NSError.errorWithCode(99, failureReason: "Unknown Error"))
 
 		printTimestamped("JUICE- Calling " + endpoint)
@@ -173,8 +172,10 @@ extension Skiplagged {
 			"auth_provider": self.authProvider!
 		]
 
-		let queue = AsyncGroup()
+		let queue = DispatchGroup()
 		var stepResult: AnyResult = .Failure(PokemapError.unknownError.error)
+
+		print(accessDict)
 
 		// First Call
 		stepResult = call(Skiplagged.API_SKIPLAGGED, data: accessDict)
@@ -213,6 +214,8 @@ extension Skiplagged {
 
 			endpointPayload["pdata"] = pdata
 		}
+
+		print(endpointPayload)
 
 		// Call 3
 		stepResult =  self.call(Skiplagged.API_SKIPLAGGED, data: endpointPayload)
@@ -325,10 +328,12 @@ extension Skiplagged {
 	// swiftlint:disable:next line_length
 	func findPokemon(bounds: ((Double, Double), (Double, Double)), stepSize: Double = 0.002, progress: (Double) -> (), completion: ([Pokemon]) -> ()) {
 		// bottom Left, topRight
+		scanInProgress = true
 
 		if inhibitScan {
 			printTimestamped("Scan inhibited. Cancelled")
 			inhibitScan = false
+			scanInProgress = false
 			return
 		}
 
@@ -340,6 +345,7 @@ extension Skiplagged {
 			let profileResult = getProfile()
 			switch profileResult {
 			case .Failure(_):
+				scanInProgress = false
 				return
 			case .Success( _):
 				printTimestamped("Success")
@@ -367,6 +373,7 @@ extension Skiplagged {
 
 		switch locationResult {
 		case .Failure(_):
+			scanInProgress = false
 			return
 		case .Success(let result):
 
@@ -386,6 +393,7 @@ extension Skiplagged {
 
 				if inhibitScan {
 					inhibitScan = false
+					scanInProgress = false
 					return
 				}
 
@@ -398,8 +406,9 @@ extension Skiplagged {
 
 					//TODO: handle errors
 					printTimestamped("ERROR: " + error.debugDescription)
+					scanInProgress = false
 
-					break
+					return
 				case .Success(let pokeData):
 
 
@@ -414,7 +423,7 @@ extension Skiplagged {
 							//TODO: handle errors
 							printTimestamped("ERROR: " + error.debugDescription)
 
-
+							scanInProgress = false
 							return
 						case .Success(let response):
 
@@ -426,6 +435,7 @@ extension Skiplagged {
 								 else {
 									//TODO: Handle Error
 									printTimestamped("Couldn't decode response")
+									scanInProgress = false
 									return
 							}
 
@@ -438,6 +448,7 @@ extension Skiplagged {
 							guard let pokemons = respDict["pokemons"] as? [[String: AnyObject]]
 							else {
 								printTimestamped("No pokemon data")
+								scanInProgress = false
 								return
 							}
 
@@ -454,17 +465,12 @@ extension Skiplagged {
 								}
 							}
 							completion(foundPokemon)
-							Thread.sleep(forTimeInterval: 0.7)
+							Thread.sleep(forTimeInterval: 0.6)
 						}
 					}
-
-
-
-
-					}
-
-
+				}
 			}
+			scanInProgress = false
 		}
 	}
 

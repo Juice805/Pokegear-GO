@@ -56,7 +56,7 @@ class Pokemon: NSObject, MKAnnotation {
         for pokemon in pokemons {
             if let poke = pokemon as? Pokemon {
 
-				let timeDiff = Calendar.current.components([.second], from: poke.expireTime, to: self.expireTime, options: [])
+				let timeDiff = Calendar.current.dateComponents([.second], from: poke.expireTime, to: self.expireTime)
 
                 if poke.dexID == self.dexID
                     && poke.coordinate.latitude == self.coordinate.latitude

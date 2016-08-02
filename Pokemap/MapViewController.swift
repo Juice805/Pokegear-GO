@@ -8,7 +8,6 @@
 
 import UIKit
 import MapKit
-import Async
 
 class MapViewController: UIViewController {
 	@IBOutlet weak var pokemap: MKMapView!
@@ -77,7 +76,7 @@ extension MapViewController {
 
 	func initializeSkiplaggedConnection() {
 
-		Async.background {
+		DispatchQueue.global(qos: .background).async {
 			while !self.client.getSpecificAPIEndpoint().success {
 				Thread.sleep(forTimeInterval: 0.5)
 				printTimestamped("Unable to retrieve specific endpoint. Retrying...")
@@ -97,32 +96,37 @@ extension MapViewController {
 		}
 	}
 
+	@IBAction func forceScan() {
+		//TODO:
+	}
+
 	func searchMap(_ mapView: MKMapView) {
 		if self.pokemap.camera.altitude < maxSearchAltitude {
 			let latDelt = mapView.region.span.latitudeDelta/2
 			let longDelt = mapView.region.span.latitudeDelta/2
 			let center = mapView.region.center
-			let queue = AsyncGroup()
+			let queue = DispatchGroup()
 
-			Async.background {
+			DispatchQueue.global(qos: .background).async {
 				let bottomLeft = (center.latitude - latDelt, center.longitude - longDelt)
 				let topRight = (center.latitude + latDelt, center.longitude + longDelt)
 
 				self.client.findPokemon(bounds: (bottomLeft, topRight), progress: {
 					progress in
-					Async.main {
+					DispatchQueue.main.async {
 						self.progress.setProgress(Float(progress), animated: true)
 
 					}
 					}, completion: {
 						foundPokemon in
 						queue.enter()
-						Async.main {
+						DispatchQueue.main.sync {
 							self.scanButton.isHidden = true
-							}.background {
+							}
+						DispatchQueue.global(qos: .background).sync {
 								for pokemon in foundPokemon {
 									if pokemon.isUnique(pokemons: mapView.annotations) {
-										Async.main {
+										DispatchQueue.main.sync {
 											self.pokemap.addAnnotation(pokemon)
 											if #available(iOS 10.0, *) {
 												pokemon.timer = Timer(fire: pokemon.expireTime, interval: 0.0, repeats: false, block: {
@@ -146,17 +150,19 @@ extension MapViewController {
 				})
 
 				queue.wait()
-				}.main {
+
+				DispatchQueue.main.async {
 					// TODO: Change scan button image, and show
 
 					self.scanButton.isHidden = false
 					self.progress.isHidden = true
+				}
 			}
 		}
 	}
 
 	func removePokemonfromTimer(timer: Timer) {
-		Async.main {
+		DispatchQueue.main.async {
 			if let pokemon = timer.userInfo as? Pokemon {
 				self.pokemap.removeAnnotation(pokemon)
 			}
@@ -171,9 +177,9 @@ extension MapViewController: MKMapViewDelegate {
 	func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
 		if let pokemon = annotation as? Pokemon {
 			let pokeDetail = MKAnnotationView()
-			pokeDetail.annotation = annotation
+			pokeDetail.annotation = pokemon
 			pokeDetail.isEnabled = true
-			pokeDetail.image = UIImage(named: "\(pokemon.dexID)")
+			pokeDetail.image = UIImage(named: "pixel\(pokemon.dexID)")
 			pokeDetail.canShowCallout = true
 			pokeDetail.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
 			return pokeDetail
@@ -185,14 +191,47 @@ extension MapViewController: MKMapViewDelegate {
 		return MKAnnotationView()
 	}
 
+	func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {
+		for view in views {
+			if let pokemon = view.annotation as? Pokemon {
+				view.image = UIImage(named: "\(pokemon.dexID)")!
+
+				let newImage = UIImage(named: "pixel\(pokemon.dexID)")
+
+
+				UIView.transition(with: view, duration: 2.0,
+				                  options: [.beginFromCurrentState, .showHideTransitionViews],
+				                  animations: {
+									view.image = newImage
+
+					},
+				                  completion: nil )
+
+				//TODO: Animate Pin drop
+			} else if view.annotation is MKUserLocation {
+				continue
+			} else {
+				//TODO: Others
+				continue
+			}
+		}
+	}
+
 	func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
 		//self.client.cancelSearch()
-		client.inhibitScan = true
+
+		if mapView.userTrackingMode == .followWithHeading
+			|| mapView.userTrackingMode == .follow {
+
+		} else {
+			client.inhibitScan = true
+		}
+
 		if self.searchCountdown != nil {
 			self.searchCountdown!.invalidate()
 			self.searchCountdown = nil
 		}
-		Async.main {
+		DispatchQueue.main.async {
 			self.scanButton.isHidden = false
 			self.progress.isHidden = true
 		}
@@ -205,12 +244,17 @@ extension MapViewController: MKMapViewDelegate {
 
 			//TODO: Search Map
 
-			//			if client.scanReady {
-			//				self.searchMap(mapView)
-			//			} else {
-			//				return
-			//			}
+			if !client.scanInProgress {
+				self.searchMap(mapView)
+				DispatchQueue.main.async {
+					self.scanButton.isHidden = true
+					self.progress.setProgress(0.0, animated: false)
+					self.progress.isHidden = false
+				}
+			}
 
+
+			return
 		}
 
 		if #available(iOS 10.0, *) {
@@ -219,7 +263,7 @@ extension MapViewController: MKMapViewDelegate {
 											(timer) in
 											self.client.inhibitScan = false
 											self.searchMap(mapView)
-											Async.main {
+											DispatchQueue.main.async {
 												self.scanButton.isHidden = true
 												self.progress.setProgress(0.0, animated: false)
 												self.progress.isHidden = false
@@ -237,7 +281,7 @@ extension MapViewController: MKMapViewDelegate {
 extension MapViewController: CLLocationManagerDelegate {
 
 	@IBAction func gotoCurrentLocation(_ sender: AnyObject) {
-		self.pokemap.setUserTrackingMode(.followWithHeading, animated: true)
+		self.pokemap.setUserTrackingMode(.follow, animated: true)
 	}
 
 	func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
@@ -246,7 +290,7 @@ extension MapViewController: CLLocationManagerDelegate {
 		}
 	}
 
-	func locationManager(_ manager: CLLocationManager, didFailWithError error: NSError) {
+	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
 		print("Location error: \(error.localizedDescription)")
 	}
 

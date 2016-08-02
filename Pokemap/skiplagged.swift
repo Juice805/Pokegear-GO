@@ -8,7 +8,6 @@
 
 import Foundation
 import Alamofire
-import Async
 
 class Skiplagged {
     static let API_SKIPLAGGED = "http://skiplagged.com/api/pokemon.php"
@@ -24,6 +23,7 @@ class Skiplagged {
     internal (set) var username: String?
     internal (set) var password: String?
 	var inhibitScan = true
+	var scanInProgress = false
 
     var skiplaggedSession: Manager
     var nianticSession: Manager
@@ -35,15 +35,14 @@ class Skiplagged {
     }
 
 	func initializeConnection(completion: () -> ()) {
-
-		Async.background {
+		DispatchQueue.global(qos: .background).async {
 			while !self.getSpecificAPIEndpoint().success {
-				Thread.sleep(forTimeInterval: 0.5)
+				Thread.sleep(forTimeInterval: 1.0)
 				printTimestamped("Unable to retrieve specific endpoint. Retrying...")
 			}
 
 			while !self.getProfile().success {
-				Thread.sleep(forTimeInterval: 0.5)
+				Thread.sleep(forTimeInterval: 1.0)
 				printTimestamped("Unable to retrieve profile. Retrying...")
 			}
 
@@ -71,18 +70,22 @@ class Skiplagged {
     }
 
 
-    var currentReq = Async.background() {}
+    var currentReq = DispatchQueue(label: "Skiplagged")
 
-    func cancelSearch() {
-        self.currentReq.cancel()
+	func cancelSearch(cancelled: () -> ()) {
+		DispatchQueue.global(qos: .background).async {
+			if self.scanInProgress {
+				self.inhibitScan = true
+				while self.inhibitScan {
 
-        Async.background {
-            self.nianticSession.session.getAllTasks { (tasks) in
-                tasks.forEach { $0.cancel() }
-            }
-            self.skiplaggedSession.session.getAllTasks { (tasks) in
-                tasks.forEach { $0.cancel() }
-            }
+				}
+
+				cancelled()
+			}
         }
     }
+
+	func cancelScan(completion: () -> ()) {
+		// TODO: 
+	}
 }

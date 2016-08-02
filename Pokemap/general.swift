@@ -8,7 +8,6 @@
 
 import Foundation
 import Alamofire
-import SwiftyJSON
 
 
 func authorizationAlert(controller: UIViewController,settings:() -> (), cancel: () -> ()) {
@@ -19,7 +18,7 @@ func authorizationAlert(controller: UIViewController,settings:() -> (), cancel: 
 		(_) in
 		let settingsURL = URL(string: UIApplicationOpenSettingsURLString)
 		if let url = settingsURL {
-			UIApplication.shared().openURL(url)
+			UIApplication.shared.openURL(url)
 			settings()
 		}
 
@@ -68,7 +67,7 @@ func printTimestamped(_ text: String) {
     print("[" + shortTime() + "] " + text)
 }
 
-enum PokemapError: ErrorProtocol {
+enum PokemapError: Error {
 	case unknownError
     case emptyUsername
     case emptyPassword

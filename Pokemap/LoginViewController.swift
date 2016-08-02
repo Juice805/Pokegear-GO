@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Async
 import MapKit
 
 class LoginViewController: UIViewController {
@@ -67,7 +66,7 @@ class LoginViewController: UIViewController {
 	}
 
 	func showLoading(_ answer: Bool) {
-		Async.main {
+		DispatchQueue.main.async {
 			if answer {
 				self.loadingIndicator.startAnimating()
 			} else {
@@ -135,7 +134,7 @@ extension LoginViewController {
 	override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
 		// Get the new view controller using segue.destinationViewController.
 		// Pass the selected object to the new view controller.
-		if let pokemap = segue.destinationViewController as? MapViewController {
+		if let pokemap = segue.destination as? MapViewController {
 
 			pokemap.client = self.client
 		}
@@ -182,7 +181,7 @@ extension LoginViewController {
 
 			self.client.initializeConnection {
 				// TODO: Modify to allow for timeout alert
-				Async.main {
+				DispatchQueue.main.async {
 					self.performSegue(withIdentifier: "loggedin", sender: self)
 				}
 			}
@@ -235,7 +234,7 @@ extension LoginViewController {
 			// TODO Alert User
 			case .Success():
 				printTimestamped("Login Successful")
-				Async.main {
+				DispatchQueue.main.async {
 					UserDefaults.standard.setValue(self.usernameField.text, forKey: "username")
 					// TODO: Store password securely
 					UserDefaults.standard.setValue(self.passwordField.text, forKey: "password")
@@ -255,7 +254,7 @@ extension LoginViewController {
 
 					self.client.initializeConnection {
 						// TODO: Modify to allow for timeout alert
-						Async.main {
+						DispatchQueue.main.async {
 							self.performSegue(withIdentifier: "loggedin", sender: self)
 						}
 					}
@@ -298,7 +297,7 @@ extension LoginViewController {
 
 	func keyboardWillShow(notification: NSNotification) {
 		secretButton.isHidden = true
-		if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue() {
+		if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
 			//if view.frame.origin.y == 0{
 
 			// checks if view needs to move
@@ -323,7 +322,7 @@ extension LoginViewController {
 
 	func keyboardWillHide(notification: NSNotification) {
 		secretButton.isHidden = false
-		if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue() {
+		if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
 			//if view.frame.origin.y != 0 {
 			if view.bounds.origin.y != 0 {
 				// origin is top left
@@ -341,10 +340,6 @@ extension LoginViewController {
 
 			}
 		}
-	}
-
-	override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-		return .portrait
 	}
 
 }

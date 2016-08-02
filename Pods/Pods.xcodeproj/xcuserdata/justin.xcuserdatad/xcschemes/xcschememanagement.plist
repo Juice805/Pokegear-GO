@@ -9,17 +9,7 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>AsyncSwift.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>Pods-Pokemap.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>SwiftyJSON.xcscheme</key>
+		<key>Pods-Pokegear GO.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -32,17 +22,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C14B7032FE2850108091EEC6A6E9DBBC</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>CC59723BB392BC18ABDCFB9ACD61769A</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>D1DC35DB2C695031A72543555FB23729</key>
+		<key>FE68BDCB2795754FD2B4ECA9A1194BED</key>
 		<dict>
 			<key>primary</key>
 			<true/>

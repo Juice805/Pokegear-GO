@@ -8,7 +8,6 @@
 
 import Foundation
 import Alamofire
-import Async
 
 
 class PokemonTrainerClub: Auth {
@@ -27,10 +26,10 @@ class PokemonTrainerClub: Auth {
 		let loginURL = URL(string: PokemonTrainerClub.LOGIN_URL)
 
 
-		let queue = AsyncGroup()
+		let queue = DispatchGroup()
 
 
-		Async.background {
+		DispatchQueue.global(qos: .background).async {
 			queue.enter()
 
 			var nianticResponse: Response<AnyObject, NSError>? = nil

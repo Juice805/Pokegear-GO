@@ -1,0 +1,6 @@
+framework module Pods_Pokegear_GO {
+  umbrella header "Pods-Pokegear GO-umbrella.h"
+
+  export *
+  module * { export * }
+}
