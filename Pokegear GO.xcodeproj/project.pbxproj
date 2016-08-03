@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		B063C98A09D25FC1664339E9 /* Pods_Pokegear_GO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97CBC433158E7C99B472AF7D /* Pods_Pokegear_GO.framework */; };
+		D01CC7F91D529BA2009D0873 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01CC7F81D529BA2009D0873 /* SettingsViewController.swift */; };
+		D035E75F1D519A1200C106F3 /* loading.swift in Sources */ = {isa = PBXBuildFile; fileRef = D035E75E1D519A1200C106F3 /* loading.swift */; };
 		D0545FBF1D447BF8001B8497 /* config.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0545FBE1D447BF8001B8497 /* config.swift */; };
 		D0748E341D417AE200950A4D /* auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0748E331D417AE200950A4D /* auth.swift */; };
 		D076878F1D3F5AEB0082AF4F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D076878E1D3F5AEB0082AF4F /* AppDelegate.swift */; };
@@ -36,6 +38,8 @@
 
 /* Begin PBXFileReference section */
 		97CBC433158E7C99B472AF7D /* Pods_Pokegear_GO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Pokegear_GO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D01CC7F81D529BA2009D0873 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		D035E75E1D519A1200C106F3 /* loading.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = loading.swift; sourceTree = "<group>"; };
 		D0545FBE1D447BF8001B8497 /* config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = config.swift; sourceTree = "<group>"; };
 		D0748E331D417AE200950A4D /* auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = auth.swift; sourceTree = "<group>"; };
 		D076878B1D3F5AEB0082AF4F /* Pokegear GO.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pokegear GO.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -142,6 +146,7 @@
 				D09E3CE71D46B94600DE9150 /* base64.swift */,
 				D07687AD1D4179060082AF4F /* general.swift */,
 				D07687AB1D4178EC0082AF4F /* pokemon.swift */,
+				D035E75E1D519A1200C106F3 /* loading.swift */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -182,6 +187,7 @@
 				D08E20FA1D4FA5B100FC1C28 /* FilterView */,
 				D08E20FF1D4FC59000FC1C28 /* LoginView */,
 				D07687901D3F5AEB0082AF4F /* MapViewController.swift */,
+				D01CC7F81D529BA2009D0873 /* SettingsViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -348,6 +354,7 @@
 				D09A63DB1D4A5B4C007DDC47 /* LoginViewController.swift in Sources */,
 				D08E20F91D4FA58F00FC1C28 /* PokemonTableViewCell.swift in Sources */,
 				D07687911D3F5AEB0082AF4F /* MapViewController.swift in Sources */,
+				D01CC7F91D529BA2009D0873 /* SettingsViewController.swift in Sources */,
 				D0748E341D417AE200950A4D /* auth.swift in Sources */,
 				D08C0D1E1D4D796D00AB0559 /* skiplagged+Sync.swift in Sources */,
 				D07687AC1D4178EC0082AF4F /* pokemon.swift in Sources */,
@@ -362,6 +369,7 @@
 				D0FD49E41D508047002FFBBE /* Alamofire+Synchronous.swift in Sources */,
 				D07687B31D4179370082AF4F /* ptc.swift in Sources */,
 				D0CBC3AB1D41B14E000303AF /* skiplagged.swift in Sources */,
+				D035E75F1D519A1200C106F3 /* loading.swift in Sources */,
 				D07687AE1D4179060082AF4F /* general.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -482,6 +490,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = PokegearGo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.justinoroz.pokegear;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -497,6 +506,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = PokegearGo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.justinoroz.pokegear;
 				PRODUCT_NAME = "$(TARGET_NAME)";
