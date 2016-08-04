@@ -1,8 +1,19 @@
 {
   "images" : [
     {
+      "resizing" : {
+        "mode" : "3-part-horizontal",
+        "center" : {
+          "mode" : "tile",
+          "width" : 29
+        },
+        "cap-insets" : {
+          "right" : 19,
+          "left" : 27
+        }
+      },
       "idiom" : "universal",
-      "filename" : "loginBezel.png",
+      "filename" : "textInput.png",
       "scale" : "1x"
     },
     {

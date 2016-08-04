@@ -26,6 +26,9 @@ class LoginViewController: UIViewController {
 	@IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
 	@IBOutlet weak var progressIndicator: UIProgressView!
 
+	@IBOutlet weak var loginBezel: UIImageView!
+	@IBOutlet var inputUnderlines: [UIImageView]!
+
 	let locationMananger = CLLocationManager()
 
 	override func viewDidLoad() {
@@ -161,15 +164,21 @@ extension LoginViewController {
 
 	@IBAction func cancelLogin() {
 		// TODO:
+		verifyProgress(status: .Started, reset: true)
 		cancelButton.isEnabled = false
 		cancelButton.isHidden = true
 		client.cancelLogin = true
 	}
 
-	func verifyProgress(status: LoginSteps) {
+	func verifyProgress(status: LoginSteps, reset: Bool = false) {
 		struct Fail {
 			static var count = 0
 			static var highestStep: LoginSteps = .Started
+		}
+
+		if reset {
+			Fail.count = 0
+			return
 		}
 
 		if status.rawValue > Fail.highestStep.rawValue {
@@ -180,13 +189,16 @@ extension LoginViewController {
 
 			if Fail.count == 10 {
 				let alert = UIAlertController(title: "", message: "", preferredStyle: .actionSheet)
-				alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+				alert.addAction(UIAlertAction(title: "Keep Trying!", style: UIAlertActionStyle.default, handler: nil))
 				alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: {
 					alertAction in
 
 					// TODO: Cancel Login
 					self.cancelLogin()
 				}))
+
+				alert.popoverPresentationController?.sourceRect = self.cancelButton.frame
+				alert.popoverPresentationController?.sourceView = self.view
 
 				switch Fail.highestStep {
 				case .APIEndpoint1, .APIEndpoint2, .APIEndpoint3:
@@ -197,11 +209,10 @@ extension LoginViewController {
 					break
 				}
 
+
 				self.present(alert, animated: true, completion: nil)
 			}
 		}
-
-
 	}
 
 	func loginFromUserDefaults() -> (Bool) {
@@ -337,12 +348,15 @@ extension LoginViewController {
 
 			// checks if view needs to move
 			// origin is top left
-			let googleButtonHeight = self.view.bounds.height - (self.googleButton.frame.origin.y + self.googleButton.frame.height)
+			let referenceOffset: CGFloat = 10.0
+			let referenceObject = self.ptcButton!
 
-			if keyboardSize.height > googleButtonHeight - 20 {
+			let referenceHeight = self.view.bounds.height - (referenceObject.frame.origin.y + referenceObject.frame.height)
+
+			if keyboardSize.height > referenceHeight - referenceOffset {
 				if view.bounds.origin.y == 0 {
 
-					let offset =  20 + keyboardSize.height - googleButtonHeight
+					let offset =  referenceOffset + keyboardSize.height - referenceHeight
 
 					UIView.animate(withDuration: 0.5, animations: {
 						// self.view.frame.origin.y -= keyboardSize.height - 150
@@ -361,9 +375,12 @@ extension LoginViewController {
 			//if view.frame.origin.y != 0 {
 			if view.bounds.origin.y != 0 {
 				// origin is top left
-				let googleButtonHeight = self.view.bounds.height - (self.googleButton.frame.origin.y + self.googleButton.frame.height)
+				let referenceOffset: CGFloat = 10.0
+				let referenceObject = self.ptcButton!
 
-				let offset =  20 + keyboardSize.height - googleButtonHeight
+				let referenceHeight = self.view.bounds.height - (referenceObject.frame.origin.y + referenceObject.frame.height)
+
+				let offset =  referenceOffset + keyboardSize.height - referenceHeight
 
 
 				UIView.animate(withDuration: 0.5, animations: {
@@ -386,6 +403,7 @@ extension LoginViewController {
 		DispatchQueue.main.async {
 			if answer {
 				self.loadingIndicator.startAnimating()
+				self.progressIndicator.setProgress(0.0, animated: false)
 			} else {
 				self.loadingIndicator.stopAnimating()
 			}
@@ -397,6 +415,10 @@ extension LoginViewController {
 			self.passwordField.isHidden = answer
 			self.googleButton.isHidden = answer
 			self.ptcButton.isHidden = answer
+
+			for underline in self.inputUnderlines {
+				underline.isHidden = answer
+			}
 		}
 	}
 

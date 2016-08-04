@@ -20,7 +20,7 @@ class WarningViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+
 	@IBAction func done(_ sender: AnyObject) {
 		dismiss(animated: true, completion: nil)
 	}
@@ -35,4 +35,10 @@ class WarningViewController: UIViewController {
     }
     */
 
+}
+
+extension WarningViewController: UINavigationBarDelegate {
+	func position(for bar: UIBarPositioning) -> UIBarPosition {
+		return .topAttached
+	}
 }
