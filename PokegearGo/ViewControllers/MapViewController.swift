@@ -76,12 +76,22 @@ class MapViewController: UIViewController {
 	}
 
 	override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
-		if segue.identifier == "loggedout" {
+
+		switch segue.identifier {
+		case "loggedout"?:
 			client.updateLogin()
-		} else if segue.identifier == "settings" {
+		case "settings"?:
 			if let settings = segue.destination as? SettingsViewController {
 				settings.client = self.client
 			}
+		case "filter"?:
+			if let filterView = segue.destination as? FilterViewController {
+				filterView.map = self.pokemap
+			}
+		default:
+			printTimestamped("Unknown Segue")
+			break
+
 		}
 	}
 
@@ -191,7 +201,7 @@ extension MapViewController {
 
 	func removePokemonfromTimer(timer: Timer) {
 		DispatchQueue.main.async {
-			if let pokemon = timer.userInfo as? Pokemon {
+			if let pokemon = timer.userInfo as? PokemonAnnotation {
 				self.pokemap.removeAnnotation(pokemon)
 			}
 		}
@@ -203,7 +213,7 @@ extension MapViewController {
 extension MapViewController: MKMapViewDelegate {
 
 	func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-		if let pokemon = annotation as? Pokemon {
+		if let pokemon = annotation as? PokemonAnnotation {
 			let pokeDetail = MKAnnotationView()
 			pokeDetail.annotation = pokemon
 			pokeDetail.isEnabled = true
@@ -221,7 +231,7 @@ extension MapViewController: MKMapViewDelegate {
 
 	func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {
 		for view in views {
-			if let pokemon = view.annotation as? Pokemon {
+			if let pokemon = view.annotation as? PokemonAnnotation {
 				view.image = UIImage(named: "\(pokemon.dexID)")!
 
 				let newImage = UIImage(named: "pixel\(pokemon.dexID)")
@@ -285,7 +295,7 @@ extension MapViewController: MKMapViewDelegate {
 	}
 
 
-	func mapView(_ mapView: MKMapView!, rendererFor overlay: MKOverlay!) -> MKOverlayRenderer! {
+	func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
 		if overlay is MKPolygon {
 			let polygonView = MKPolygonRenderer(overlay: overlay)
 			polygonView.strokeColor = #colorLiteral(red: 0.05439098924, green: 0.1344551742, blue: 0.1884709597, alpha: 1).withAlphaComponent(0.2)
@@ -294,7 +304,7 @@ extension MapViewController: MKMapViewDelegate {
 
 			return polygonView
 		} else {
-			return nil
+			return MKOverlayRenderer(overlay: overlay)
 		}
 	}
 

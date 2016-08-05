@@ -10,7 +10,7 @@ import Foundation
 import Alamofire
 
 
-func syncJSONRequest(method: Alamofire.Method,
+func syncRequest(method: Alamofire.Method,
                      // swiftlint:disable:next variable_name
 	URLString: URLStringConvertible,
 	parameters: [String : AnyObject]? = nil,
@@ -36,7 +36,7 @@ func syncJSONRequest(method: Alamofire.Method,
 	return requestResponse!
 }
 
-func syncStringRequest(method: Alamofire.Method,
+func syncRequest(method: Alamofire.Method,
                      // swiftlint:disable:next variable_name
 	URLString: URLStringConvertible,
 	parameters: [String : AnyObject]? = nil,
@@ -61,4 +61,3 @@ func syncStringRequest(method: Alamofire.Method,
 
 	return requestResponse!
 }
-

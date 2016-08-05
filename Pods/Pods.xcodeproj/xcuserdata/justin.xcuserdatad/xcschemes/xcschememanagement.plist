@@ -9,7 +9,17 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Locksmith.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-Pokegear GO.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>VersionTrackerSwift.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -17,12 +27,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>28F13655B238F1EDD36D9AD2D5E0A2F7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>79C040AFDDCE1BCBF6D8B5EB0B85887F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>FE68BDCB2795754FD2B4ECA9A1194BED</key>
+		<key>7F616271BBA314E539C762E21D5DF12D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>92943306EC8070DF9CD02ECD505D2CD5</key>
 		<dict>
 			<key>primary</key>
 			<true/>

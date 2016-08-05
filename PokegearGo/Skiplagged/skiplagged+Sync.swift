@@ -77,7 +77,10 @@ extension Skiplagged {
 				return .Failure(PokemapError.invalidJSON.error)
 			}
 
-			let response = syncJSONRequest(method: .POST, URLString: endpoint, parameters: dictionaryObject, encoding: .url)
+			let response: Response<AnyObject, NSError> = syncRequest(method: .POST,
+			                                                         URLString: endpoint,
+			                                                         parameters: dictionaryObject,
+			                                                         encoding: .url)
 
 			switch response.result {
 			case .failure(let error):
@@ -319,7 +322,7 @@ extension Skiplagged {
 	}
 
 	// swiftlint:disable:next line_length
-	func findPokemon(bounds: ((Double, Double), (Double, Double)), stepSize: Double = 0.002, progress: (Float) -> (), stopped: (NSError?) -> (), found: ([Pokemon]) -> ()) {
+	func findPokemon(bounds: ((Double, Double), (Double, Double)), stepSize: Double = 0.002, progress: (Float) -> (), stopped: (NSError?) -> (), found: ([PokemonAnnotation]) -> ()) {
 		// bottom Left, topRight
 
 		if inhibitScan {
@@ -413,7 +416,7 @@ extension Skiplagged {
 					var pokeDataRecieved = false
 
 					rateLimitCheck: while !pokeDataRecieved {
-						
+
 						if inhibitScan {
 							inhibitScan = false
 							scanInProgress = nil
@@ -468,11 +471,11 @@ extension Skiplagged {
 							pokeDataRecieved = true
 
 							printTimestamped("Found \(pokemons.count) Pokemon")
-							var foundPokemon: [Pokemon] = []
+							var foundPokemon: [PokemonAnnotation] = []
 							for pokemon in pokemons {
 								if let poke = pokemon["pokemon_name"] as? String {
 									printTimestamped("Found " + poke)
-									foundPokemon.append(Pokemon(info: pokemon)!)
+									foundPokemon.append(PokemonAnnotation(info: pokemon)!)
 								} else {
 									//TODO: Handle error
 								}
@@ -491,7 +494,7 @@ extension Skiplagged {
 	          stepSize: Double = 0.002,
 	          progress: (Float) -> (),
 	          stopped: (NSError?) -> (),
-	          found: ([Pokemon]) -> ()) {
+	          found: ([PokemonAnnotation]) -> ()) {
 
 		DispatchQueue.global(qos: .utility).async {
 			switch type {

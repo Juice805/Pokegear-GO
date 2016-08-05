@@ -13,7 +13,10 @@ import Alamofire
 // Asynchronous Skiplagged functions
 extension Skiplagged {
 
-	func loginWithPTC(_ username: String, password: String, statusUpdate: (LoginSteps) -> (), completion: (BoolResult) -> ()) {
+	func loginWithPTC(_ username: String,
+	                  password: String,
+	                  statusUpdate: (LoginSteps) -> (),
+	                  completion: (BoolResult) -> ()) {
 		print("[\(shortTime())] Login Started")
 
 		let ptcAuth = PokemonTrainerClub()
@@ -23,7 +26,7 @@ extension Skiplagged {
 
 		switch token {
 		case .Success(let token):
-			self.updateLogin(provider, token: token, username: username, password: password) 
+			self.updateLogin(provider, token: token, username: username, password: password)
 				printTimestamped("Access Token Received: \(token)")
 				completion(.Success())
 

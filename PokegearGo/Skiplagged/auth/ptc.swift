@@ -26,7 +26,7 @@ class PokemonTrainerClub: Auth {
 		let loginURL = URL(string: PokemonTrainerClub.LOGIN_URL)
 
 		// MARK: - Initial Request
-		let initialResponse = syncJSONRequest(method: .GET, URLString: loginURL!, encoding: .url)
+		let initialResponse: Response<AnyObject, NSError> = syncRequest(method: .GET, URLString: loginURL!, encoding: .url)
 
 
 		switch initialResponse.result {
@@ -60,7 +60,10 @@ class PokemonTrainerClub: Auth {
 
 
 			//MARK: Ticket Request
-			let ticketResponse = syncJSONRequest(method: .POST, URLString: loginURL!, parameters: params, encoding: .url)
+			let ticketResponse: Response<AnyObject, NSError> = syncRequest(method: .POST,
+			                                                               URLString: loginURL!,
+			                                                               parameters: params,
+			                                                               encoding: .url)
 
 			guard let serverResponse = ticketResponse.response,
 				let range = serverResponse.url?.urlString.range(of: ".*ticket=",
@@ -89,7 +92,10 @@ class PokemonTrainerClub: Auth {
 
 			// MARK: - Token request
 
-			let tokenResponse = syncStringRequest(method: .POST, URLString: oauthURL, parameters: params2, encoding: .url)
+			let tokenResponse: Response<String, NSError> = syncRequest(method: .POST,
+			                                                           URLString: oauthURL,
+			                                                           parameters: params2,
+			                                                           encoding: .url)
 
 
 			switch tokenResponse.result {

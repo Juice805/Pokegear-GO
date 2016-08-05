@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11209.5" systemVersion="15G31" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+    <entity name="Attack" representedClassName="PokemonAttack" syncable="YES" codeGenerationType="class">
+        <attribute name="charge" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="critRatio" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="damage" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="duration" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="energy" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="name" attributeType="String" syncable="YES"/>
+        <relationship name="pokemons" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Pokemon" inverseName="attacks" inverseEntity="Pokemon" syncable="YES"/>
+        <relationship name="type" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Type" inverseName="attacks" inverseEntity="Type" syncable="YES"/>
+        <fetchedProperty name="fetchedProperty" optional="YES" syncable="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="Attack"/>
+        </fetchedProperty>
+    </entity>
+    <entity name="Pokemon" representedClassName="Pokemon" syncable="YES" codeGenerationType="class">
+        <attribute name="attack" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="attackTimerS" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="baseAttack" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="baseCaptureRate" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="baseDefense" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="baseFleeRate" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="baseStamina" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="candyToEvolve" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="classification" attributeType="String" syncable="YES"/>
+        <attribute name="collisionHeadRadiusM" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="collisionHeightM" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="collisionRadiusM" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="cpNormalized" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="cpRank" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="defense" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="egg" optional="YES" attributeType="Integer 32" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="evolutionPips" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="height" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="heightStdDev" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="hp" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="hpNormalized" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="hpRank" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="jumpTimeS" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="maxCP" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="maxHP" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="movementTimerS" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="name" attributeType="String" syncable="YES"/>
+        <attribute name="pokedexHeightM" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="pokedexWeightKg" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="pokemonClass" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="weight" attributeType="Float" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="weightStdDev" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="attacks" toMany="YES" minCount="2" deletionRule="Nullify" destinationEntity="Attack" inverseName="pokemons" inverseEntity="Attack" syncable="YES"/>
+        <relationship name="evolvesFrom" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Pokemon" inverseName="evolvesTo" inverseEntity="Pokemon" syncable="YES"/>
+        <relationship name="evolvesTo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Pokemon" inverseName="evolvesFrom" inverseEntity="Pokemon" syncable="YES"/>
+        <relationship name="types" toMany="YES" minCount="1" maxCount="2" deletionRule="Nullify" ordered="YES" destinationEntity="Type" inverseName="pokemons" inverseEntity="Type" syncable="YES"/>
+    </entity>
+    <entity name="Type" representedClassName="PokemonType" syncable="YES" codeGenerationType="class">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="attacks" toMany="YES" deletionRule="Nullify" destinationEntity="Attack" inverseName="type" inverseEntity="Attack" syncable="YES"/>
+        <relationship name="pokemons" toMany="YES" deletionRule="Nullify" destinationEntity="Pokemon" inverseName="types" inverseEntity="Pokemon" syncable="YES"/>
+        <relationship name="strongAgainst" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Type" inverseName="weakAgainst" inverseEntity="Type" syncable="YES"/>
+        <relationship name="weakAgainst" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Type" inverseName="strongAgainst" inverseEntity="Type" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Attack" positionX="-45" positionY="117" width="128" height="194"/>
+        <element name="Pokemon" positionX="-261" positionY="29" width="128" height="600"/>
+        <element name="Type" positionX="-101" positionY="360" width="128" height="120"/>
+    </elements>
+</model>

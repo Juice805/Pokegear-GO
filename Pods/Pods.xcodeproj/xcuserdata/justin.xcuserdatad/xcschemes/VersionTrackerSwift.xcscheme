@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "28F13655B238F1EDD36D9AD2D5E0A2F7"
-               BuildableName = "Pods_Pokegear_GO.framework"
-               BlueprintName = "Pods-Pokegear GO"
+               BlueprintIdentifier = "7F616271BBA314E539C762E21D5DF12D"
+               BuildableName = "VersionTrackerSwift.framework"
+               BlueprintName = "VersionTrackerSwift"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "28F13655B238F1EDD36D9AD2D5E0A2F7"
-            BuildableName = "Pods_Pokegear_GO.framework"
-            BlueprintName = "Pods-Pokegear GO"
+            BlueprintIdentifier = "7F616271BBA314E539C762E21D5DF12D"
+            BuildableName = "VersionTrackerSwift.framework"
+            BlueprintName = "VersionTrackerSwift"
             ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

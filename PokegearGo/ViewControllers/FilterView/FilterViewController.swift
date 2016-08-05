@@ -7,8 +7,11 @@
 //
 
 import UIKit
+import MapKit
 
 class FilterViewController: UIViewController {
+
+	lazy var map: MKMapView? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,7 +23,7 @@ class FilterViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+
 
     /*
     // MARK: - Navigation
@@ -53,7 +56,7 @@ extension FilterViewController: UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		if let pokemon = tableView.dequeueReusableCell(withIdentifier: "Pokemon") as? PokemonTableViewCell {
-			pokemon.pokeImage.image = UIImage(named: "1")
+			pokemon.pokeImage.image = UIImage(named: "\(indexPath.row + 1)")
 			pokemon.name.text = "Bulbasaur"
 			return pokemon
 		} else {

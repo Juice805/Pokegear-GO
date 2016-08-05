@@ -12,4 +12,10 @@ pod 'Alamofire',
 #pod 'Moya',
 #:git => 'https://github.com/Moya/Moya.git',
 #:branch => 'swift3'
+pod 'Locksmith',
+:git => 'https://github.com/matthewpalmer/Locksmith.git',
+:branch => 'swift-3.0'
+pod 'VersionTrackerSwift',
+:git => 'https://github.com/tbaranes/VersionTrackerSwift.git',
+:branch => 'feature/swift3'
 end

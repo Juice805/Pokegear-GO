@@ -10,7 +10,7 @@ import Foundation
 import Alamofire
 
 
-func authorizationAlert(controller: UIViewController,settings:() -> (), cancel: () -> ()) {
+func authorizationAlert(controller: UIViewController, settings:() -> (), cancel: () -> ()) {
 	let alert = UIAlertController(title: "Location Authorization Required",
 	                              message: "Please authorize Pokegear GO to view your location in Privacy Settings",
 	                              preferredStyle: .alert)

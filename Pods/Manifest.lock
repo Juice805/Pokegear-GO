@@ -1,22 +1,40 @@
 PODS:
   - Alamofire (3.4.1)
+  - Locksmith (2.0.8)
+  - VersionTrackerSwift (1.0)
 
 DEPENDENCIES:
   - Alamofire (from `https://github.com/Alamofire/Alamofire.git`, branch `swift3`)
+  - Locksmith (from `https://github.com/matthewpalmer/Locksmith.git`, branch `swift-3.0`)
+  - VersionTrackerSwift (from `https://github.com/tbaranes/VersionTrackerSwift.git`, branch `feature/swift3`)
 
 EXTERNAL SOURCES:
   Alamofire:
     :branch: swift3
     :git: https://github.com/Alamofire/Alamofire.git
+  Locksmith:
+    :branch: swift-3.0
+    :git: https://github.com/matthewpalmer/Locksmith.git
+  VersionTrackerSwift:
+    :branch: feature/swift3
+    :git: https://github.com/tbaranes/VersionTrackerSwift.git
 
 CHECKOUT OPTIONS:
   Alamofire:
     :commit: a94323c6e556d47408b6186c948324b040d7ffc8
     :git: https://github.com/Alamofire/Alamofire.git
+  Locksmith:
+    :commit: 5055c8997e7223768ccd386f5e84d4414cb95d3f
+    :git: https://github.com/matthewpalmer/Locksmith.git
+  VersionTrackerSwift:
+    :commit: af72c90f51f46c2edf41f4368ffc16de73b61948
+    :git: https://github.com/tbaranes/VersionTrackerSwift.git
 
 SPEC CHECKSUMS:
   Alamofire: 01a82e2f6c0f860ade35534c8dd88be61bdef40c
+  Locksmith: a8ed41ac4c06506ea8cb199d8ec8a8d3d108eb2a
+  VersionTrackerSwift: ae4c793b54070c3a95a475df45810bb8147f5373
 
-PODFILE CHECKSUM: ae4ad4d676cf4d7e7e395331d467adb3b65b5f1a
+PODFILE CHECKSUM: 308b32555864cdf265cad3a37226be120af99e18
 
 COCOAPODS: 1.0.1

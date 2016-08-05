@@ -72,7 +72,10 @@ class Skiplagged {
 	}
 
 
-    func updateLogin(_ provider: String? = nil, token: String? = nil, username: String? = nil, password: String? = nil) {
+    func updateLogin(_ provider: String? = nil,
+                     token: String? = nil,
+                     username: String? = nil,
+                     password: String? = nil) {
 
 		self.authProvider = provider
 		self.accessToken = token

@@ -9,7 +9,7 @@
 import Foundation
 import MapKit
 
-class Pokemon: NSObject, MKAnnotation {
+class PokemonAnnotation: NSObject, MKAnnotation {
 
     let coordinate: CLLocationCoordinate2D
     private var info: [String: AnyObject]
@@ -54,7 +54,7 @@ class Pokemon: NSObject, MKAnnotation {
 
     func isUnique(pokemons: [MKAnnotation]) -> Bool {
         for pokemon in pokemons {
-            if let poke = pokemon as? Pokemon {
+            if let poke = pokemon as? PokemonAnnotation {
 
 				let timeDiff = Calendar.current.dateComponents([.second], from: poke.expireTime, to: self.expireTime)
 

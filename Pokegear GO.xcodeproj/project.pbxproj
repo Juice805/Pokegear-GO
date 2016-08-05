@@ -15,7 +15,7 @@
 		D076878F1D3F5AEB0082AF4F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D076878E1D3F5AEB0082AF4F /* AppDelegate.swift */; };
 		D07687911D3F5AEB0082AF4F /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07687901D3F5AEB0082AF4F /* MapViewController.swift */; };
 		D07687941D3F5AEB0082AF4F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D07687921D3F5AEB0082AF4F /* Main.storyboard */; };
-		D07687971D3F5AEB0082AF4F /* Pokemap.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D07687951D3F5AEB0082AF4F /* Pokemap.xcdatamodeld */; };
+		D07687971D3F5AEB0082AF4F /* Pokedex.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D07687951D3F5AEB0082AF4F /* Pokedex.xcdatamodeld */; };
 		D07687991D3F5AEB0082AF4F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D07687981D3F5AEB0082AF4F /* Assets.xcassets */; };
 		D076879C1D3F5AEB0082AF4F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D076879A1D3F5AEB0082AF4F /* LaunchScreen.storyboard */; };
 		D07687A41D3F5C440082AF4F /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D07687A31D3F5C440082AF4F /* MapKit.framework */; };
@@ -46,7 +46,7 @@
 		D076878E1D3F5AEB0082AF4F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D07687901D3F5AEB0082AF4F /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		D07687931D3F5AEB0082AF4F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		D07687961D3F5AEB0082AF4F /* Pokemap.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Pokemap.xcdatamodel; sourceTree = "<group>"; };
+		D07687961D3F5AEB0082AF4F /* Pokedex.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Pokedex.xcdatamodel; sourceTree = "<group>"; };
 		D07687981D3F5AEB0082AF4F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D076879B1D3F5AEB0082AF4F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D076879D1D3F5AEB0082AF4F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -93,6 +93,14 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		D0527F741D54746C00DBAE28 /* data */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = data;
+			path = ..;
+			sourceTree = "<group>";
+		};
 		D07687821D3F5AEB0082AF4F = {
 			isa = PBXGroup;
 			children = (
@@ -115,13 +123,14 @@
 		D076878D1D3F5AEB0082AF4F /* PokegearGo */ = {
 			isa = PBXGroup;
 			children = (
+				D0527F741D54746C00DBAE28 /* data */,
 				D08C0D1A1D4D77EA00AB0559 /* Skiplagged */,
 				D093B1D11D4E8E8600488FD8 /* Storyboards */,
 				D093B1D01D4E8E6300488FD8 /* ViewControllers */,
 				D076878E1D3F5AEB0082AF4F /* AppDelegate.swift */,
 				D07687981D3F5AEB0082AF4F /* Assets.xcassets */,
 				D076879D1D3F5AEB0082AF4F /* Info.plist */,
-				D07687951D3F5AEB0082AF4F /* Pokemap.xcdatamodeld */,
+				D07687951D3F5AEB0082AF4F /* Pokedex.xcdatamodeld */,
 				D08E20FB1D4FA92900FC1C28 /* Pokemon.plist */,
 				D09BB06B1D4B3999007998BE /* PokemonAnnotationView.xib */,
 				D0545FBE1D447BF8001B8497 /* config.swift */,
@@ -145,8 +154,8 @@
 				D0FD49E31D508047002FFBBE /* Alamofire+Synchronous.swift */,
 				D09E3CE71D46B94600DE9150 /* base64.swift */,
 				D07687AD1D4179060082AF4F /* general.swift */,
-				D07687AB1D4178EC0082AF4F /* pokemon.swift */,
 				D035E75E1D519A1200C106F3 /* loading.swift */,
+				D07687AB1D4178EC0082AF4F /* pokemon.swift */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -361,7 +370,7 @@
 				D08C0D1C1D4D780400AB0559 /* skiplagged+Async.swift in Sources */,
 				D0545FBF1D447BF8001B8497 /* config.swift in Sources */,
 				D07687B01D41791E0082AF4F /* google.swift in Sources */,
-				D07687971D3F5AEB0082AF4F /* Pokemap.xcdatamodeld in Sources */,
+				D07687971D3F5AEB0082AF4F /* Pokedex.xcdatamodeld in Sources */,
 				D08E20F71D4F3D1D00FC1C28 /* FilterViewController.swift in Sources */,
 				D076878F1D3F5AEB0082AF4F /* AppDelegate.swift in Sources */,
 				D09E3CE81D46B94600DE9150 /* base64.swift in Sources */,
@@ -437,7 +446,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -479,7 +488,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -493,12 +502,14 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = PokegearGo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.justinoroz.pokegear;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -509,8 +520,9 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = PokegearGo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.justinoroz.pokegear;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -544,13 +556,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		D07687951D3F5AEB0082AF4F /* Pokemap.xcdatamodeld */ = {
+		D07687951D3F5AEB0082AF4F /* Pokedex.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				D07687961D3F5AEB0082AF4F /* Pokemap.xcdatamodel */,
+				D07687961D3F5AEB0082AF4F /* Pokedex.xcdatamodel */,
 			);
-			currentVersion = D07687961D3F5AEB0082AF4F /* Pokemap.xcdatamodel */;
-			path = Pokemap.xcdatamodeld;
+			currentVersion = D07687961D3F5AEB0082AF4F /* Pokedex.xcdatamodel */;
+			path = Pokedex.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
