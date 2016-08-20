@@ -13,10 +13,15 @@ import CoreData
 class FilterViewController: UIViewController {
 
 	lazy var map: MKMapView? = nil
+	
+
+	let pokedex = AppDelegate.pokedex
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -25,15 +30,22 @@ class FilterViewController: UIViewController {
     }
 
 
-    /*
+
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+
+		if let detailView = segue.destination as? PokemonDetailViewController,
+			let cell = sender as? PokemonTableViewCell {
+
+			detailView.pokemon = cell.pokemon
+
+		}
     }
-    */
+
 	@IBAction func dismissSelf(_ sender: AnyObject) {
 		self.modalTransitionStyle = .coverVertical
 		//self.popoverPresentationController?.presentedViewController.dismiss(animated: true, completion: nil)
@@ -57,7 +69,7 @@ extension FilterViewController: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		if let pokemon = tableView.dequeueReusableCell(withIdentifier: "Pokemon") as? PokemonTableViewCell {
 			pokemon.pokeImage.image = UIImage(named: "\(indexPath.row + 1)")
-			pokemon.name.text = "Bulbasaur"
+			pokemon.loadInfo(pokemonData: pokedex.pokemon[indexPath.row + 1])
 			return pokemon
 		} else {
 			return UITableViewCell()

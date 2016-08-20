@@ -3,7 +3,26 @@
 <plist version="1.0">
 <dict>
 	<key>types</key>
-	<array><string>Normal</string><string>Fighting</string><string>Flying</string><string>Poison</string><string>Ground</string><string>Rock</string><string>Bug</string><string>Ghost</string><string>Steel</string><string>Fire</string><string>Water</string><string>Grass</string><string>Electric</string><string>Psychic</string><string>Ice</string><string>Dragon</string><string>Dark</string><string>Fairy</string></array>
+	<array>
+		<string>Normal</string>
+		<string>Fighting</string>
+		<string>Flying</string>
+		<string>Poison</string>
+		<string>Ground</string>
+		<string>Rock</string>
+		<string>Bug</string>
+		<string>Ghost</string>
+		<string>Steel</string>
+		<string>Fire</string>
+		<string>Water</string>
+		<string>Grass</string>
+		<string>Electric</string>
+		<string>Psychic</string>
+		<string>Ice</string>
+		<string>Dragon</string>
+		<string>Dark</string>
+		<string>Fairy</string>
+	</array>
 	<key>defenseMatrix</key>
 	<array>
 		<array>
@@ -13202,7 +13221,6 @@
 		<integer>9000</integer>
 		<integer>10000</integer>
 		<integer>10000</integer>
-		<string>-</string>
 	</array>
 	<key>candy</key>
 	<array>
@@ -13246,7 +13264,6 @@
 		<integer>12</integer>
 		<integer>15</integer>
 		<integer>15</integer>
-		<string>-</string>
 	</array>
 	<key>expReq</key>
 	<array>

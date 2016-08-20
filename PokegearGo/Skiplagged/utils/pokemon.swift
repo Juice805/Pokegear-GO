@@ -28,8 +28,8 @@ class PokemonAnnotation: NSObject, MKAnnotation {
 		guard let lat = info["latitude"] as? Double,
 		let long = info["longitude"] as? Double,
 		let id = info["pokemon_id"] as? Int,
-		let name = info["pokemon_name"] as? String,
-		let expireTimestamp = info["expires"] as? Int
+		let expireTimestamp = info["expires"] as? Int,
+		let name = AppDelegate.pokedex.pokemon[id]["Name"] as? String
 		else {
 			return nil
 		}

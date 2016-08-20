@@ -20,7 +20,6 @@ class MapViewController: UIViewController {
 	var searchCountdown: Timer? = nil
 	var firstSearchQueued = false
 
-
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.pokemap.delegate = self
@@ -206,6 +205,13 @@ extension MapViewController {
 			}
 		}
 	}
+
+	@IBAction func openGO(_ sender: AnyObject) {
+		// 
+		UIApplication.sharedApplication()
+			.openURL(NSURL(string: "b335b2fc-69dc-472c-9e88-e6c97f84091c-3://")!)
+	}
+
 }
 
 
