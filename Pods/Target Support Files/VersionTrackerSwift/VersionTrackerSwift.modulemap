@@ -1,6 +1,0 @@
-framework module VersionTrackerSwift {
-  umbrella header "VersionTrackerSwift-umbrella.h"
-
-  export *
-  module * { export * }
-}

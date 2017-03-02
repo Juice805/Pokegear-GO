@@ -95,13 +95,6 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		D0527F741D54746C00DBAE28 /* data */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = data;
-			sourceTree = "<group>";
-		};
 		D07687821D3F5AEB0082AF4F = {
 			isa = PBXGroup;
 			children = (
@@ -124,16 +117,12 @@
 		D076878D1D3F5AEB0082AF4F /* PokegearGo */ = {
 			isa = PBXGroup;
 			children = (
-				D08C0D1A1D4D77EA00AB0559 /* Skiplagged */,
+				D09D82871E68E5560054F240 /* Vendors */,
 				D093B1D11D4E8E8600488FD8 /* Storyboards */,
-				D093B1D01D4E8E6300488FD8 /* ViewControllers */,
-				D0527F741D54746C00DBAE28 /* data */,
-				D076878E1D3F5AEB0082AF4F /* AppDelegate.swift */,
-				D07687981D3F5AEB0082AF4F /* Assets.xcassets */,
-				D076879D1D3F5AEB0082AF4F /* Info.plist */,
-				D07687951D3F5AEB0082AF4F /* Pokedex.xcdatamodeld */,
-				D08E20FB1D4FA92900FC1C28 /* Pokedex.plist */,
-				D09BB06B1D4B3999007998BE /* PokemonAnnotationView.xib */,
+				D093B1D01D4E8E6300488FD8 /* Controllers */,
+				D09D82881E68E5C90054F240 /* Application */,
+				D09D82891E68E62F0054F240 /* Resources */,
+				D09D828A1E68E6370054F240 /* Models */,
 			);
 			path = PokegearGo;
 			sourceTree = "<group>";
@@ -192,24 +181,59 @@
 			path = LoginView;
 			sourceTree = "<group>";
 		};
-		D093B1D01D4E8E6300488FD8 /* ViewControllers */ = {
+		D093B1D01D4E8E6300488FD8 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D076879A1D3F5AEB0082AF4F /* LaunchScreen.storyboard */,
+				D07687921D3F5AEB0082AF4F /* Main.storyboard */,
 				D08E20FA1D4FA5B100FC1C28 /* FilterView */,
 				D08E20FF1D4FC59000FC1C28 /* LoginView */,
+				D09BB06B1D4B3999007998BE /* PokemonAnnotationView.xib */,
 				D07687901D3F5AEB0082AF4F /* MapViewController.swift */,
 				D01CC7F81D529BA2009D0873 /* SettingsViewController.swift */,
 			);
-			path = ViewControllers;
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 		D093B1D11D4E8E8600488FD8 /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
-				D076879A1D3F5AEB0082AF4F /* LaunchScreen.storyboard */,
-				D07687921D3F5AEB0082AF4F /* Main.storyboard */,
 			);
 			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		D09D82871E68E5560054F240 /* Vendors */ = {
+			isa = PBXGroup;
+			children = (
+				D08C0D1A1D4D77EA00AB0559 /* Skiplagged */,
+			);
+			path = Vendors;
+			sourceTree = "<group>";
+		};
+		D09D82881E68E5C90054F240 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				D076878E1D3F5AEB0082AF4F /* AppDelegate.swift */,
+				D076879D1D3F5AEB0082AF4F /* Info.plist */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		D09D82891E68E62F0054F240 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D07687981D3F5AEB0082AF4F /* Assets.xcassets */,
+				D08E20FB1D4FA92900FC1C28 /* Pokedex.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		D09D828A1E68E6370054F240 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D07687951D3F5AEB0082AF4F /* Pokedex.xcdatamodeld */,
+			);
+			name = Models;
 			sourceTree = "<group>";
 		};
 		F2B6EAB8F90762905F1A91A8 /* Frameworks */ = {
@@ -395,7 +419,7 @@
 				D07687931D3F5AEB0082AF4F /* Base */,
 			);
 			name = Main.storyboard;
-			path = .;
+			path = ../Storyboards/.;
 			sourceTree = "<group>";
 		};
 		D076879A1D3F5AEB0082AF4F /* LaunchScreen.storyboard */ = {
@@ -404,7 +428,7 @@
 				D076879B1D3F5AEB0082AF4F /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			path = .;
+			path = ../Storyboards/.;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
