@@ -225,7 +225,7 @@
 				D07687981D3F5AEB0082AF4F /* Assets.xcassets */,
 				D08E20FB1D4FA92900FC1C28 /* Pokedex.plist */,
 			);
-			name = Resources;
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		D09D828A1E68E6370054F240 /* Models */ = {
