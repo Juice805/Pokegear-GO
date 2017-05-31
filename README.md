@@ -10,8 +10,8 @@ In the meantime I will be working on other reference features of the app, as wel
 
 ### Images
 
-![Login](/Github Docs/IMG_0878.jpg) ![Map](/Github Docs/IMG_0874.jpg)
-
+<img src="/Github Docs/IMG_0878.jpg" alt="Login" width="420">
+<img src="/Github Docs/IMG_0874.jpg" alt="Map" width="420">
 <img src="/Github Docs/IMG_0868.jpg" alt="Scanning" width="420">
 
 ### Todo
